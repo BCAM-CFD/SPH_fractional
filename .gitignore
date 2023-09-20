@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+
+## BKP
+
+bkp*/
+code_bkp*/

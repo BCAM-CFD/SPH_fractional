@@ -1,0 +1,42 @@
+After download MCF/mcf/ folder,
+I suppose you have already installed PPM library
+in a proper path,
+which needs to be given when you configure mcf client.
+I also suppose you have installed makedepf90,
+which is to check routines dependency of mcf/src/*.F90.
+
+1) run script
+ 
+  ./clean.sh
+
+to clean all old files, which may be machine dependant.
+
+2) run script
+
+  ./bootstrap.sh
+
+to make use of GNU autoconf + automake,
+which generates configure script.
+
+3) run configuration.
+
+./configure --prefix=$HOME/MCF/mcf/mcf_install/ FC=ifort MPIFC=mpif90 LDFLAGS=-L$HOME/MCF/ppm/local/lib/ FCFLAGS=-I$HOME/MCF/ppm/local/include/ MAKEDEPF90=$HOME/MCF/ppm/local/bin/makedepf90
+
+to generate Makefile, which is used to compile mcf code.
+
+LDFLAGS: indicate ppm library object files.
+FCFLAGS: indicate ppm library header files.
+
+
+4) run compiler
+
+  make -j 8
+
+to compile mcf code,
+-j 8 specify to use 8 processors to accelerate compiling.
+
+5) run installation
+
+  make install
+
+to install mcf executable binary at ...../mcf/mcf_install/ folder.
