@@ -957,7 +957,7 @@
            !**** Avoiding divergency ****
            !*** If the problem with the sign of the integral is fixed, this should be also changed. ***
            !500000.0_MK 
-           max_mem_function = 100.0_MK 
+           max_mem_function = 10000.0_MK 
            IF (this%mem_function(I) > max_mem_function) THEN 
               this%mem_function(I) = max_mem_function
               !this%mem_function(I) = 0
@@ -965,7 +965,7 @@
            !**** Correction because later, the integral is calculated with a wrong sign ****
            !**** So we add a minus sign ****
            !**** But maybe it is better to keep the plus... testing with PLUS
-           this%mem_function(I) = -this%mem_function(I)
+           this%mem_function(I) = +this%mem_function(I)
 
            
         !    total = 0.

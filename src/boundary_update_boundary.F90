@@ -82,13 +82,13 @@
                 this%num_osci > 0 )THEN
               
               DO i = 1, 2*dim
-                 \
+                 
                  IF( this%shear_type(i) == 2 ) THEN
                     
                     this%shear_v(1:dim,i) = &
                          this%shear_v0(1:dim,i) * &
-                         !SIN(this%shear_freq(i) * time_v)
-                         COS(this%shear_freq(i) * time_v)
+                         SIN(this%shear_freq(i) * time_v)
+                         !COS(this%shear_freq(i) * time_v)
                            !cos is the original version
                  END IF ! shear_type
                  
