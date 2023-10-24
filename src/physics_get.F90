@@ -583,6 +583,51 @@
       END FUNCTION physics_get_Npoints_integration
       !******************************************************************
 
+      !*********** Added by Adolfo for the fractional model *************
+      REAL(MK) FUNCTION physics_get_E(this,stat_info)
+        
+        TYPE(Physics), INTENT(IN)       :: this
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        physics_get_E = this%E
+        
+        RETURN
+        
+      END FUNCTION physics_get_E
+      !******************************************************************
+
+      !*********** Added by Adolfo for the fractional model *************
+      REAL(MK) FUNCTION physics_get_alpha(this,stat_info)
+        
+        TYPE(Physics), INTENT(IN)       :: this
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        physics_get_alpha = this%alpha
+        
+        RETURN
+        
+      END FUNCTION physics_get_alpha
+      !******************************************************************
+
+      !*********** Added by Adolfo for the fractional model *************
+      REAL(MK) FUNCTION physics_get_beta(this,stat_info)
+        
+        TYPE(Physics), INTENT(IN)       :: this
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        physics_get_beta = this%beta
+        
+        RETURN
+        
+      END FUNCTION physics_get_beta
+      !******************************************************************
+
 !************** Added by Adolfo **********
       REAL(MK) FUNCTION physics_get_a(this,stat_info)
         

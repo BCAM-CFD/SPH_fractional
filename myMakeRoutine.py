@@ -17,8 +17,12 @@ subprocess.call(shlex.split(("make AUTOCONF=: AUTOHEADER=: AUTOMAKE=: ACLOCAL=: 
 #os.system("myMakeIntel()")
 #subprocess.call("myMakeIntel")
 #date="_"+datetime.today().strftime('%Y_%m_%d-%H%M%S')
+# try:
 date=modification_date("./src/mcf")
+# except:
+# #date=datetime.datetime.today()
 date="_"+date.strftime('%y%m%d-%H%M%S')
+# date="_NEW"
 print("\n#########\nAbout to copy (if newer)\nfile with suffix "+date+"\n#########")
 bkp_file="./code_bkp/mcf"+date
 working_file="/scratch/lsantelli/mcf"+date

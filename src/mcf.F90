@@ -378,7 +378,6 @@
         ! non-default io_new() should be used, 
         ! not same time
         !----------------------------------------------------
-        
         CALL io_new(mcf_io,mcf_ctrl,ctrl_file,&
              mcf_phys,stat_info_sub)
         
@@ -874,7 +873,7 @@
               GOTO 9999
            END IF
            
-        ELSE ! particle created internall, then distribute.
+        ELSE ! particle created internally, then distribute.
            
            !-------------------------------------------------
            ! x, y(, z); vx, vy(, vz);  p_ID, s_ID
@@ -935,9 +934,7 @@
         !----------------------------------------------------
         
         IF ( rank == 0 ) THEN
-           
            CALL physics_display_parameters(mcf_phys,stat_info_sub)
-           
         END IF
         
         

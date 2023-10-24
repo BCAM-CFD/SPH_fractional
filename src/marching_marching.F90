@@ -550,7 +550,7 @@
         !
 	! Has to be done BEFORE building neighbor list.
       	!----------------------------------------------------
-        
+
         CALL particles_map_ghost_get(this%particles, &
              l_map_x  = .TRUE., l_map_m = .TRUE., &
              l_map_id = .TRUE., stat_info=stat_info_sub)
@@ -712,6 +712,7 @@
              l_map_x  = .TRUE., l_map_rho=.TRUE., &
              l_map_v  = .TRUE., &
              l_map_dx_prev =(.NOT. Newtonian), &
+             l_map_x_old =(.NOT. Newtonian), &
              stat_info=stat_info_sub)
 !!$        CALL particles_map_ghost_get(this%particles,&
 !!$             l_map_x  = .TRUE., l_map_rho=.TRUE., &
@@ -828,7 +829,7 @@
 
            !******* Added by Adolfo for the integral fractional model *****
            ! This subroutine is in the file particles_compute_interaction.F90
-           CALL particles_compute_gradx_prev(this%particles, stat_info_sub)
+           CALL particles_compute_gradx_prev(this%particles, 0, stat_info_sub)
            CALL particles_map_ghost_put(this%particles, &
                 l_map_x   = .TRUE., &
                 l_map_gradx_prev = .TRUE.,&
@@ -843,7 +844,7 @@
 
            !******** Modified by Adolfo for the integral fractional model *****
            CALL particles_compute_pressure_tensor_integral(this%particles,&
-                num_part_all,stat_info_sub)
+                num_part_all,0, stat_info_sub)
 !!$           CALL particles_compute_pressure_tensor(this%particles,&
 !!$                num_part_all,stat_info_sub)
            !**********************************************************
@@ -916,12 +917,12 @@
            CALL particles_map_ghost_put(this%particles, &
                 l_map_x   = .TRUE., l_map_f  = .TRUE., &
                 l_map_s   = stress_tensor,    &
+                l_map_vgt = (.NOT. Newtonian),&
                 l_map_au  = p_energy, &
                 stat_info = stat_info_sub)
 !!$           CALL particles_map_ghost_put(this%particles, &
 !!$                l_map_x   = .TRUE., l_map_f  = .TRUE., &
 !!$                l_map_s   = stress_tensor,    &
-!!$                l_map_vgt = (.NOT. Newtonian),&
 !!$                l_map_au  = p_energy, &
 !!$                stat_info = stat_info_sub)
            !**************************************************************************
@@ -936,6 +937,9 @@
            
         END IF ! symmetry
         
+!!$        IF (STEP == 20000) THEN
+!!$           CALL scratch(this%particles, stat_info_sub)
+!!$        ENDIF
         
         !----------------------------------------------------
         ! If the in-let flow velocity is a input parameter,

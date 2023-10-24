@@ -87,7 +87,7 @@
         INTEGER                         :: Nsteps_memory
         INTEGER                         :: Npoints_integration
         INTEGER                         :: freq_integration
-        LOGICAL :: control
+        LOGICAL                         :: control
         INTEGER                         :: steps_since_last_saved_pos
         !***********************************************************
 	REAL(MK)                        :: tau_sm
@@ -814,7 +814,7 @@
              !-----------------------------------------------
              
              READ(cvalue,*,IOSTAT=ios, ERR=200) E
-             
+
              CALL physics_set_E(phys,E,stat_info_sub)
              !********************************************
 
@@ -857,7 +857,6 @@
              !-- phys%Nsteps_memory is saved below --
              Nsteps_memory = NINT(time_saved * tau / dt)
 
-
            !**** Added by Adolfo for the integral fractional model ****
            ELSE IF (carg == 'NPOINTS_INTEGRATION') THEN
 
@@ -872,19 +871,16 @@
              control = .TRUE.
              DO WHILE (control)
 
+                !-- Npoints_integration must be an exact divisor of Nsteps_memory, and
+                !   Npoints_integration-1 should be even
                 IF (MOD(Npoints_integration-1,2) == 0) THEN
                    Npoints_integration = Npoints_integration + 1
                 ENDIF
-                !-- Npoints_integration must be an exact divisor of Nsteps_memory, and
-                !   Npoints_integration-1 should be even
-!!$                IF ( (MOD(Nsteps_memory, Npoints_integration) == 0) .AND. &
-!!$                     (MOD(Npoints_integration-1,2) == 0) ) THEN
                 IF ( (MOD(Nsteps_memory, Npoints_integration) == 0)) THEN
                    freq_integration = NINT(REAL(Nsteps_memory) / REAL(Npoints_integration))
                    control = .FALSE.
                 ELSE
                    Nsteps_memory = Nsteps_memory + 1
-!                   Npoints_integration = Npoints_integration + 1
                 ENDIF
              ENDDO
              !--- Memory function is allocated and calculated ---

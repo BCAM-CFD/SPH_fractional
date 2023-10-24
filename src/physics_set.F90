@@ -881,7 +881,7 @@
         
         stat_info = 0
         
-        this%alpha =  d_beta
+        this%beta =  d_beta
         
         RETURN
         
@@ -890,7 +890,9 @@
 
       !**** Added by Adolfo for the integral fractional model ****
       SUBROUTINE physics_set_mem_function(this, Nsteps_memory, E, tau, alpha, beta, dt, stat_info)
-        
+        !------------------------------------------------------------
+        ! Calculation in an array of the memory function of the fluid.
+        !------------------------------------------------------------
         TYPE(Physics), INTENT(inout)       :: this
         INTEGER, INTENT(in)                :: Nsteps_memory
         REAL(MK), INTENT(in)               :: E
@@ -925,48 +927,60 @@
 
         DO I = 1, Nsteps_memory
 
-           !-- for I = 1 -> Delta_t = (Nsteps_memory - 1) * dt
-           !-- for I = 2 -> Delta_t = (Nsteps_memory - 2) * dt
-           !...for I = Nsteps_memory -> Delta_t = 0
+           !-- for I = 1 -> Delta_t = - (Nsteps_memory - 1) * dt
+           !-- for I = 2 -> Delta_t = - (Nsteps_memory - 2) * dt
+           !-- for I = Nsteps_memory -> Delta_t = 0
            Delta_t = REAL(Nsteps_memory - I, KIND = MK) * dt
-
 
            IF (Delta_t .NE. 0) THEN 
               x = -G/V * Delta_t**(alpha-beta)
            ELSE !-- To avoid singularity at x = 0 --
+                !*** The memory function at x = 0 is not going to be used, so it does not matter ***
               x = -G/V * tol**(alpha-beta)
            ENDIF
-           CALL mittag_leffler(Mit_Lef, x, alpha-beta, 1-beta, 5, 1000, 1.0E-9_MK, stat_info)
-           IF (stat_info == -1) THEN
-              GOTO 1000 !-- End of subroutine --
-           ENDIF
-           CALL der_mittag_leffler(der_Mit_Lef, x, alpha-beta, 1-beta, 5, 1000, 1.0E-9_MK, stat_info)
+!!$           CALL mittag_leffler(Mit_Lef, x, alpha-beta, 1.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)
+!!$           IF (stat_info == -1) THEN
+!!$              GOTO 1000 !-- End of subroutine --
+!!$           ENDIF
+!!$           CALL der_mittag_leffler(der_Mit_Lef, x, alpha-beta, 1.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)
+!!$           IF (stat_info == -1) THEN
+!!$              GOTO 1000 !-- End of subroutine --
+!!$           ENDIF
+!!$           IF (Delta_t .NE. 0) THEN            
+!!$              this%mem_function(I) = beta * G * Delta_t**(-beta-1.0_MK) * Mit_Lef + &
+!!$                   G**2.0_MK / V * (alpha-beta) * Delta_t**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
+!!$           ELSE
+!!$              this%mem_function(I) = beta * G * tol**(-beta-1.0_MK) * Mit_Lef + &
+!!$                   G**2.0_MK / V * (alpha-beta) * tol**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
+!!$           ENDIF
+
+
+           CALL mittag_leffler(Mit_Lef, x, alpha-beta, -beta, 5, 1000, 1.0E-9_MK, stat_info)
            IF (stat_info == -1) THEN
               GOTO 1000 !-- End of subroutine --
            ENDIF
 
+           !*** The sign of the memory function and the integral is a mess in the references. 
+           !   The combination of 
+           !    signs from here and the subroutine particles_compute_pressure_tensor_integral are
+           !    consistent with Eqs. (20), (22) and (23) from the paper
+           !    A fractional K-BKZ constitutive formulation for describing the nonlinear
+           !    rheology of multiscale complex fluids
+           !         by   Aditya Jaishankar and Gareth H. McKinley
            IF (Delta_t .NE. 0) THEN            
-              this%mem_function(I) = beta * G * Delta_t**(-beta-1.0_MK) * Mit_Lef + &
-                   G**2.0_MK / V * (alpha-beta) * Delta_t**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
+              this%mem_function(I) = G * Delta_t**(-beta-1.0_MK) * Mit_lef
            ELSE
-              this%mem_function(I) = beta * G * tol**(-beta-1.0_MK) * Mit_Lef + &
-                   G**2.0_MK / V * (alpha-beta) * tol**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
+              this%mem_function(I) = G * tol**(-beta-1.0_MK) * Mit_lef
            ENDIF
 
-
-           !**** Avoiding divergency ****
-           !*** If the problem with the sign of the integral is fixed, this should be also changed. ***
-           !500000.0_MK 
-           max_mem_function = 10000.0_MK 
-           IF (this%mem_function(I) > max_mem_function) THEN 
-              this%mem_function(I) = max_mem_function
-              !this%mem_function(I) = 0
-           ENDIF
-           !**** Correction because later, the integral is calculated with a wrong sign ****
-           !**** So we add a minus sign ****
-           !**** But maybe it is better to keep the plus... testing with PLUS
-           this%mem_function(I) = +this%mem_function(I)
-
+!!$           !**** Avoiding divergency ****
+!!$           !*** If the problem with the sign of the integral is fixed, this should be also changed. ***
+!!$           !500000.0_MK 
+!!$           max_mem_function = 500000.0_MK 
+!!$           IF (this%mem_function(I) > max_mem_function) THEN 
+!!$              this%mem_function(I) = max_mem_function
+!!$              !this%mem_function(I) = 0
+!!$           ENDIF
            
         !    total = 0.
         !    !-- Luca addon.
@@ -975,6 +989,10 @@
         !    ENDDO
         !    !-this%mem_function(I) = n_p(1) * kt_p / tau(1) * exp(- Delta_t / tau(1))
         !    this%mem_function(I) = total
+
+!!$           !**** Usual Maxwell case ****
+!!$           this%mem_function(I) = -E/tau * exp(-Delta_t/tau)
+
         ENDDO
 
 
@@ -1472,18 +1490,18 @@ SUBROUTINE mittag_leffler(E, x, alpha, beta, kmin, kmax, tol, error_out)
 
   error_out = 0
 
-  IF ((alpha < 0)) THEN
-     error_out = 1
-     WRITE(*,*) '*** Special function Mittlag-Leffler error: alpha '
-     WRITE(*,*) '     should not be negative.'
-     GOTO 1000 !-- End of subroutine --
-  ENDIF
-  IF ((beta < 0) .OR. (beta > 1)) THEN
-     error_out = 1
-     WRITE(*,*) '*** Special function Mittlag-Leffler error: beta '
-     WRITE(*,*) '     should not be negative.'
-     GOTO 1000 !-- End of subroutine --
-  ENDIF  
+!!$  IF ((alpha < 0)) THEN
+!!$     error_out = 1
+!!$     WRITE(*,*) '*** Special function Mittlag-Leffler error: alpha '
+!!$     WRITE(*,*) '     should not be negative.'
+!!$     GOTO 1000 !-- End of subroutine --
+!!$  ENDIF
+!!$  IF ((beta < 0) .OR. (beta > 1)) THEN
+!!$     error_out = 1
+!!$     WRITE(*,*) '*** Special function Mittlag-Leffler error: beta '
+!!$     WRITE(*,*) '     should not be negative.'
+!!$     GOTO 1000 !-- End of subroutine --
+!!$  ENDIF  
   
   E     = 0.0_MK
   E_old = 0.0_MK

@@ -545,28 +545,27 @@ SUBROUTINE particles_compute_interaction(this,stat_info)
   ! for non-symmetry : allocate num_part_real
   !----------------------------------------------------
 
-  !*********** Commented by Adolfo for the fractional case *******************
-!!$        IF ( .NOT. Newtonian ) THEN
-!!$           
-!!$           IF(ASSOCIATED(this%vgt)) THEN
-!!$              DEALLOCATE(this%vgt)
-!!$           END IF
-!!$           
-!!$           IF(  symmetry ) THEN
-!!$              
-!!$              ALLOCATE(this%vgt(num_dim**2,this%num_part_all),&
-!!$                   STAT=stat_info_sub)
-!!$              
-!!$           ELSE
-!!$              
-!!$              ALLOCATE(this%vgt(num_dim**2,this%num_part_real),&
-!!$                   STAT=stat_info_sub)
-!!$              
-!!$           END IF
-!!$           
-!!$           this%vgt(:,:) = 0.0_MK
-!!$           
-!!$        END IF
+  IF ( .NOT. Newtonian ) THEN
+     
+     IF(ASSOCIATED(this%vgt)) THEN
+        DEALLOCATE(this%vgt)
+     END IF
+     
+     IF(  symmetry ) THEN
+        
+        ALLOCATE(this%vgt(num_dim**2,this%num_part_all),&
+             STAT=stat_info_sub)
+              
+     ELSE
+        
+        ALLOCATE(this%vgt(num_dim**2,this%num_part_real),&
+             STAT=stat_info_sub)
+        
+     END IF
+     
+     this%vgt(:,:) = 0.0_MK
+     
+  END IF
 
   !----------------------------------------------------
   ! Allocate memory for acceleration of
@@ -951,7 +950,7 @@ END SUBROUTINE particles_compute_interaction
 
 !*********** Added by Adolfo for the integral fractional model ***********
 !**** The subroutine is based on particles_compute_interaction *****
-SUBROUTINE particles_compute_gradx_prev(this,stat_info)
+SUBROUTINE particles_compute_gradx_prev(this, step, stat_info)
   !----------------------------------------------------
   ! Subroutine  : particles_compute_gradx_prev
   !----------------------------------------------------
@@ -971,7 +970,8 @@ SUBROUTINE particles_compute_gradx_prev(this,stat_info)
   !----------------------------------------------------
 
   TYPE(Particles), INTENT(INOUT)  :: this
-  INTEGER, INTENT(OUT)		:: stat_info
+  INTEGER, INTENT(IN)             :: step
+  INTEGER, INTENT(OUT)		  :: stat_info
 
   !----------------------------------------------------
   ! Local variables start here :
@@ -1274,7 +1274,6 @@ SUBROUTINE particles_compute_gradx_prev(this,stat_info)
   !----------------------------------------------------
 
   !******** Added by Adolfo for the fractional case ***********
-  Npoints_integration     = physics_get_Npoints_integration(this%phys,stat_info)
   freq_integration = physics_get_freq_integration(this%phys,stat_info)
   Npoints_integration = physics_get_Npoints_integration(this%phys,stat_info)
 
@@ -1509,7 +1508,7 @@ SUBROUTINE particles_compute_gradx_prev(this,stat_info)
                           DO b = 1, num_dim  ! ---, row direction
                              x_ip_prev = this%x(b,ip) -this%dx_prev((b-1)*Npoints_integration+T,ip)
                              x_jp_prev = this%x(b,jp) -this%dx_prev((b-1)*Npoints_integration+T,jp)
-
+                             
                              DO a = 1, num_dim ! |,  column direction
                                 !****** We calculate (grad r')^{ab} = grad^a r'^b
                                 n = (a-1)*num_dim + b
@@ -1587,4 +1586,41 @@ SUBROUTINE particles_compute_gradx_prev(this,stat_info)
 
 END SUBROUTINE particles_compute_gradx_prev
 !*****************************************************
+
+! SUBROUTINE scratch(this,stat_info)
+!   IMPLICIT NONE
+!   TYPE(Particles), INTENT(INOUT)  :: this
+!   INTEGER, INTENT(OUT)		:: stat_info
+!   INTEGER :: T
+!   INTEGER                         ::  Npoints_integration
+!   INTEGER :: I, a, b, n, dim
+
+!   Npoints_integration     = physics_get_Npoints_integration(this%phys,stat_info)
+!   dim = 2
+
+! !   DO I = 1, this%num_part_all
+! !      IF (this%id(1,I) == 500) THEN
+! !         DO T = 1, Npoints_integration
+! !            DO b = 1, DIM
+! !               WRITE(*,'(A, 2I, 2E20.10)') 'ppp ', T, b, this%vgt(b,I)
+! !            ENDDO
+! !         ENDDO
+! !      ENDIF
+! !   ENDDO
+  
+! !!$   DO I = 1, this%num_part_all
+! !!$      IF (this%id(1,I) == 500) THEN
+! !!$         DO T = 1, Npoints_integration
+! !!$            DO a = 1, dim
+! !!$               DO b = 1, dim
+! !!$                  n = (a-1)*dim + b
+! !!$                  WRITE(*,'(A, 3I, 1E20.10)') 'RRR ', T, a, b, this%gradx_prev((n-1)*Npoints_integration+T, I)
+! !!$               ENDDO
+! !!$            ENDDO
+! !!$         ENDDO
+! !!$      ENDIF
+! !!$   ENDDO
+  
+
+! END SUBROUTINE scratch
 

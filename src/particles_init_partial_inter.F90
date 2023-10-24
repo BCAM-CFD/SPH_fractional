@@ -290,5 +290,3 @@
  
       END SUBROUTINE particles_init_partial_inter
 
-      
-     

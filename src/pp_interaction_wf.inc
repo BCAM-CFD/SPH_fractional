@@ -96,14 +96,13 @@
      rho_ip = this%rho(jp)
      rho_jp = this%rho(jp)
 
-!*********** Commented by Adolfo for the integral fractional model *************          
-!!$#include "pp_vgt_ip.inc"
-!!$     
-!!$     IF ( symmetry ) THEN
-!!$        
-!!$#include "pp_vgt_jp.inc"
-!!$        
-!!$     END IF
+#include "pp_vgt_ip.inc"
+     
+     IF ( symmetry ) THEN
+        
+#include "pp_vgt_jp.inc"
+        
+     END IF
 
      this%pt(1:num_dim,1:num_dim,ip) = &
           this%pt(1:num_dim,1:num_dim,jp)

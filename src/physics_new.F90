@@ -329,6 +329,12 @@
            !****** Added by Adolfo for the integral fractional model *****
            WRITE(*,*) 'Npoints_integration = ', this%Npoints_integration
            WRITE(*,*) 'Nsteps_memory = ', this%Nsteps_memory
+           WRITE(*,*) 'E = ', this%E
+           WRITE(*,*) 'alpha = ', this%alpha
+           WRITE(*,*) 'beta = ', this%beta
+           WRITE(*,*) 'time_saved = ', this%time_saved
+           WRITE(*,*) 'freq_integration = ', this%freq_integration           
+           WRITE(*,*) 'freq_steps_saved = ', this%freq_steps_saved           
            !****************************************************
 
            !****** Commented by Adolfo for the integral fractional model *****

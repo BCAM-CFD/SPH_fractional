@@ -91,15 +91,13 @@
      rho_ip = this%rho(jp)
      rho_jp = this%rho(jp)
 
-!*********** Commented by Adolfo for the integral fractional model *************          
-!!$#include "pp_vgt_ip.inc"
-!!$     
-!!$     IF ( symmetry ) THEN
-!!$        
-!!$#include "pp_vgt_jp.inc"
-!!$        
-!!$     END IF
-!*******************************************************************************
+#include "pp_vgt_ip.inc"
+     
+     IF ( symmetry ) THEN
+        
+#include "pp_vgt_jp.inc"
+        
+     END IF
 
      !**** Comment by Adolfo *****
      ! Pressure tensor is the same for both particles      

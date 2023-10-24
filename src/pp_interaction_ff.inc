@@ -45,15 +45,14 @@
      rho_ip = this%rho(ip)
      rho_jp = this%rho(jp)
 
-!*********** Commented by Adolfo for the integral fractional model *************     
-!!$#include "pp_vgt_ip.inc"
-!!$     
-!!$     IF ( symmetry ) THEN
-!!$        
-!!$#include "pp_vgt_jp.inc"
-!!$        
-!!$     END IF
-!*******************************************************************************
+#include "pp_vgt_ip.inc"
+     
+     IF ( symmetry ) THEN
+        
+#include "pp_vgt_jp.inc"
+        
+     END IF
+
 
      CALL rhs_force_ff(this%rhs,&
           this%x(1:num_dim,ip),&
