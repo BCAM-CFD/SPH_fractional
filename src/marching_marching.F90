@@ -844,7 +844,7 @@
 
            !******** Modified by Adolfo for the integral fractional model *****
            CALL particles_compute_pressure_tensor_integral(this%particles,&
-                num_part_all,0, stat_info_sub)
+                num_part_all,0, rank, stat_info_sub)
 !!$           CALL particles_compute_pressure_tensor(this%particles,&
 !!$                num_part_all,stat_info_sub)
            !**********************************************************

@@ -927,8 +927,8 @@
 
         DO I = 1, Nsteps_memory
 
-           !-- for I = 1 -> Delta_t = - (Nsteps_memory - 1) * dt
-           !-- for I = 2 -> Delta_t = - (Nsteps_memory - 2) * dt
+           !-- for I = 1 -> Delta_t = (Nsteps_memory - 1) * dt
+           !-- for I = 2 -> Delta_t = (Nsteps_memory - 2) * dt
            !-- for I = Nsteps_memory -> Delta_t = 0
            Delta_t = REAL(Nsteps_memory - I, KIND = MK) * dt
 

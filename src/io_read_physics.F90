@@ -809,8 +809,7 @@
           ELSE IF (carg == 'E') THEN
              
              !-----------------------------------------------
-             ! KB(Boltzmann Constant) * 
-             ! Temperature for dumbell
+             ! Elastic modulus
              !-----------------------------------------------
              
              READ(cvalue,*,IOSTAT=ios, ERR=200) E
@@ -822,8 +821,7 @@
           ELSE IF (carg == 'ALPHA') THEN
              
              !-----------------------------------------------
-             ! KB(Boltzmann Constant) * 
-             ! Temperature for dumbell
+             ! alpha parameter from the fractional model
              !-----------------------------------------------
              
              READ(cvalue,*,IOSTAT=ios, ERR=200) alpha
@@ -835,8 +833,7 @@
           ELSE IF (carg == 'BETA') THEN
              
              !-----------------------------------------------
-             ! KB(Boltzmann Constant) * 
-             ! Temperature for dumbell
+             ! beta parameter from the fractional model
              !-----------------------------------------------
              
              READ(cvalue,*,IOSTAT=ios, ERR=200) beta
@@ -896,7 +893,7 @@
 
              !-- Next variable is initialized --
              steps_since_last_saved_pos = 0
-             CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub)             
+             CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub) 
              !************************************************************
 
           ELSE IF (carg == 'EIGEN_DYNAMICS') THEN

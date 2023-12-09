@@ -296,8 +296,7 @@
         !          The velocities have anyway to be mapped
         !          for ghosts.
 	!----------------------------------------------------
-        
-        
+
 #ifdef __DEBUG_INTEGRATE_VV
         IF ( debug_flag == 3 ) THEN
            debug_time0 = &
@@ -344,7 +343,7 @@
                 debug_time1 - debug_time0
         END IF
 #endif        
-        
+
         !************** Commented by Adolfo for the fractional model ***********
 !!$        !----------------------------------------------------
 !!$        ! For non-Newtonian viscoelastic Oldroyd-B model.
@@ -819,7 +818,7 @@
            END IF
            
         END IF ! num_shear > 0
-        
+
         !----------------------------------------------------
         ! Adjust real particles' r/v after motion,
         ! according to boundary conditions,
@@ -834,8 +833,7 @@
                 "Adjusting r or v failed ! "
            stat_info = -1
            GOTO 9999
-        END IF
-        
+        END IF        
         
         !----------------------------------------------------
         ! Decompose partially, since positions have changed.
@@ -865,6 +863,7 @@
         CALL particles_decompose_partial(this%particles,&
              l_map_x    = .TRUE., l_map_v  = .TRUE., &
              l_map_m    = .TRUE., l_map_id = .TRUE., &
+             l_map_vgt = (.NOT. Newtonian), &
              l_map_u    = p_energy, &
              l_map_dx_prev   = (.NOT. Newtonian), &
              l_map_x_old = (.NOT. Newtonian), &
@@ -925,9 +924,16 @@
         END IF
 #endif   
 
+        !************ Modified by Adolfo for the frantional integral model ********
         CALL particles_map_ghost_get(this%particles, &
              l_map_x  = .TRUE., l_map_m =.TRUE., &
-             l_map_id = .TRUE., stat_info=stat_info_sub)
+             l_map_id = .TRUE., l_map_vgt=.TRUE., &
+             stat_info=stat_info_sub)
+        
+!!$        CALL particles_map_ghost_get(this%particles, &
+!!$             l_map_x  = .TRUE., l_map_m =.TRUE., &
+!!$             l_map_id = .TRUE., stat_info=stat_info_sub)
+        !***************************************************************************
         
         IF ( stat_info_sub /= 0 ) THEN
            PRINT *,"marching_integrate_VV : ", &
@@ -935,6 +941,7 @@
            stat_info = -1     
            GOTO 9999
         END IF
+
         
 #ifdef __DEBUG_INTEGRATE_VV
         IF ( debug_flag == 3 ) THEN
@@ -960,7 +967,7 @@
            stat_info = -1
            GOTO 9999
         END IF
-        
+
         !----------------------------------------------------
         ! After mapping ghosts number of all(ghosts)
         ! particles on each process might have changed.
@@ -972,8 +979,7 @@
              particles_get_num_part_ghost(this%particles,stat_info_sub)
         num_part_all   = &
              particles_get_num_part_all(this%particles,stat_info_sub)
-      
-        
+
         !----------------------------------------------------
         ! Get all particles' (including ghosts) positions,
 	! to build neighbor list.
@@ -1293,7 +1299,7 @@
            !**** Modified by Adolfo for the integral fractional model ****
            ! This subroutine is in particles_compute_pressure_tensor.F90
            CALL particles_compute_pressure_tensor_integral(this%particles,&
-                num_part_all, step, stat_info_sub)
+                num_part_all, step, rank, stat_info_sub)
 !!$           CALL particles_compute_pressure_tensor(this%particles,&
 !!$                num_part_all,stat_info_sub)
            !***************************************************
@@ -1685,7 +1691,6 @@
            GOTO 9999
         END IF
         
-        
         !----------------------------------------------------
         ! Check if potential energy is needed.
         !----------------------------------------------------
@@ -1734,6 +1739,7 @@
            END IF
            
         END IF ! num_shear > 0
+
         
 #ifdef __DEBUG_INTEGRATE_VV
         

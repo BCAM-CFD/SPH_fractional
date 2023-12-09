@@ -5,7 +5,7 @@
 ! -2 * eta *sum_j F_{ij}/(di*dj) * v_{ij} = 2 * eta *sum_j W'_{ij}/(r_{ij} * di*dj) * v_{ij}
 !   *** The original subroutine is saved at the end of the file ****
 !******************************************************************************************
-      SUBROUTINE rhs_force_ff_non_Newtonian_Espanol(this,&
+      SUBROUTINE rhs_force_ff_non_Newtonian_Espanol_not_really(this,&
            xi,xj,dij,vi,vj,numi,numj, pi,pj,&
            mi,mj,w,gradw,fi,fj,stat_info)
         
@@ -240,9 +240,10 @@
         
         RETURN
         
-      END SUBROUTINE rhs_force_ff_non_Newtonian_Espanol
+      END SUBROUTINE rhs_force_ff_non_Newtonian_Espanol_not_really
 
-      SUBROUTINE rhs_force_ff_non_Newtonian_Espanol_original(this,&
+!--------------------------------------------------------------
+      SUBROUTINE rhs_force_ff_non_Newtonian_Espanol(this,&
            xi,xj,dij,vi,vj,numi,numj, pi,pj,&
            mi,mj,w,gradw,fi,fj,stat_info)
         
@@ -481,5 +482,4 @@
         
         RETURN
         
-      END SUBROUTINE rhs_force_ff_non_Newtonian_Espanol_original
-      
+      END SUBROUTINE rhs_force_ff_non_Newtonian_Espanol

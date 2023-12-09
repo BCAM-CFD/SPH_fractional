@@ -343,7 +343,7 @@
            output(current_dim+1:current_dim+num_id,I) = id(1:num_id,I)
         ENDDO
         !*********************************************
-        
+
         current_dim = current_dim + num_id
         
 #ifdef __IO_PARTICLES_FORCE_TOTAL
@@ -482,7 +482,7 @@
         IF (ASSOCIATED(id)) THEN
            DEALLOCATE(id)
         END IF
-        
+
 #ifdef __IO_PARTICLES_FORCE_TOTAL
         IF (ASSOCIATED(f)) THEN
            DEALLOCATE(f)

@@ -1587,40 +1587,26 @@ SUBROUTINE particles_compute_gradx_prev(this, step, stat_info)
 END SUBROUTINE particles_compute_gradx_prev
 !*****************************************************
 
-! SUBROUTINE scratch(this,stat_info)
-!   IMPLICIT NONE
-!   TYPE(Particles), INTENT(INOUT)  :: this
-!   INTEGER, INTENT(OUT)		:: stat_info
-!   INTEGER :: T
-!   INTEGER                         ::  Npoints_integration
-!   INTEGER :: I, a, b, n, dim
+!***********************************
+! Added by Adolfo. Subroutine to debug and find errors.
+!***********************************
+SUBROUTINE scratch(this, rank, num, step, stat_info)
+  IMPLICIT NONE
+  TYPE(Particles), INTENT(INOUT)  :: this
+  INTEGER, INTENT(IN)             :: rank
+  INTEGER, INTENT(IN)             :: num
+  INTEGER, INTENT(IN)             :: step
+  INTEGER, INTENT(OUT)		:: stat_info
+  INTEGER :: T
+  INTEGER                         ::  Npoints_integration
+  INTEGER :: I, a, b, n, dim
 
-!   Npoints_integration     = physics_get_Npoints_integration(this%phys,stat_info)
-!   dim = 2
+  IF (num .NE. SIZE(this%vgt, 2)) THEN
+     WRITE(*,*) 'ttt ', rank, step
+     WRITE(*,*) rank, num, SIZE(this%vgt,2)
+  ELSE
+     WRITE(*,*) 'sss ', rank, step
+  ENDIF
 
-! !   DO I = 1, this%num_part_all
-! !      IF (this%id(1,I) == 500) THEN
-! !         DO T = 1, Npoints_integration
-! !            DO b = 1, DIM
-! !               WRITE(*,'(A, 2I, 2E20.10)') 'ppp ', T, b, this%vgt(b,I)
-! !            ENDDO
-! !         ENDDO
-! !      ENDIF
-! !   ENDDO
-  
-! !!$   DO I = 1, this%num_part_all
-! !!$      IF (this%id(1,I) == 500) THEN
-! !!$         DO T = 1, Npoints_integration
-! !!$            DO a = 1, dim
-! !!$               DO b = 1, dim
-! !!$                  n = (a-1)*dim + b
-! !!$                  WRITE(*,'(A, 3I, 1E20.10)') 'RRR ', T, a, b, this%gradx_prev((n-1)*Npoints_integration+T, I)
-! !!$               ENDDO
-! !!$            ENDDO
-! !!$         ENDDO
-! !!$      ENDIF
-! !!$   ENDDO
-  
-
-! END SUBROUTINE scratch
+END SUBROUTINE scratch
 

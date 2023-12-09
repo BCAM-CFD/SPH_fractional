@@ -141,7 +141,7 @@
       END SUBROUTINE particles_compute_pressure_tensor
 
 !**** Subroutine added by Adolfo for the integral fractional model ****      
-SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, stat_info)
+SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, rank, stat_info)
   !----------------------------------------------------
   ! Subroutine :  particles_compute_pressure_tensor_integral
   !----------------------------------------------------
@@ -164,6 +164,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
   TYPE(Particles), INTENT(INOUT)          :: this
   INTEGER, INTENT(IN)                     :: num
   INTEGER, INTENT(IN)                     :: initial_step
+  INTEGER, INTENT(IN)                     :: rank
   INTEGER, INTENT(OUT)                    :: stat_info
 
   !----------------------------------------------------
@@ -235,18 +236,18 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
   steps_since_last_saved_pos = physics_get_steps_since_last_saved_pos(this%phys,stat_info_sub)       
   !-- The description of these times is defined below. 
   !   For simplicity, the origin of times has been changed. 
-  IF (steps_since_last_saved_pos .NE. 0) THEN
-     t1 =  - freq_integration*dt - steps_since_last_saved_pos*dt
-     t2 =  - steps_since_last_saved_pos*dt
-     t3 =    0.0_MK 
-  ELSE !If steps_since_last_saved_pos = 0, t2 = t3. So we redefine them
-     t1 =  - 2.0_MK * freq_integration*dt ! - steps_since_last_saved_pos*dt
-     t2 =  - freq_integration*dt ! - steps_since_last_saved_pos*dt
-     t3 =  0.0_MK
-  ENDIF
-  aux1 = 1.0_MK / ((t1 - t2) * (t1 - t3))
-  aux2 = 1.0_MK / ((t2 - t1) * (t2 - t3))
-  aux3 = 1.0_MK / ((t3 - t1) * (t3 - t2))
+!!$  IF (steps_since_last_saved_pos .NE. 0) THEN
+!!$     t1 =  - freq_integration*dt - steps_since_last_saved_pos*dt
+!!$     t2 =  - steps_since_last_saved_pos*dt
+!!$     t3 =    0.0_MK 
+!!$  ELSE !If steps_since_last_saved_pos = 0, t2 = t3. So we redefine them
+!!$     t1 =  - 2.0_MK * freq_integration*dt ! - steps_since_last_saved_pos*dt
+!!$     t2 =  - freq_integration*dt ! - steps_since_last_saved_pos*dt
+!!$     t3 =  0.0_MK
+!!$  ENDIF
+!!$  aux1 = 1.0_MK / ((t1 - t2) * (t1 - t3))
+!!$  aux2 = 1.0_MK / ((t2 - t1) * (t2 - t3))
+!!$  aux3 = 1.0_MK / ((t3 - t1) * (t3 - t2))
 
   !----------------------------------------------------
   ! Allocate memory for tau.
@@ -261,13 +262,14 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
   IF (initial_step == 0) THEN 
      NULLIFY(this%vgt)
      ALLOCATE(this%vgt(dim*dim,num))
-     this%vgt(1:dim,1:num) = 0.0_MK
+     this%vgt(1:dim*dim,1:num) = 0.0_MK
   ENDIF
 
   !--------------------------------------------------------------------------
   !-- Integral to calculate the most recent contribution to the stress tensor
   !--------------------------------------------------------------------------
   !- tcut is calculated -
+  ! **  Note that tcut is negative **
   tcut = -( steps_since_last_saved_pos + freq_integration ) * dt
   
   !- Relaxation modulus is computed (** note that -tcut is positive **) -
@@ -284,7 +286,10 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
   !-- More quantities are calculated --
   CALL mittag_leffler(Mit_Lef, x, alpha-beta, 2.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)     
 
+  ! The one used now
   integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
+  ! The one I gave Luca to test.
+  ! integral = ((-tcut) * relax_modulus  - G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   !-----------------------------------------------------------------------
 
   !----------------------------------------------------
@@ -301,128 +306,6 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
   !    etc
   !--- In general, k component is saved from ((k-1)*Npoints_integration + 1 to k*Npoints_integration)
 
-  !************* TESTING *********************
-!!$  IF (initial_step == 20000) THEN 
-!!$     DO K = 1, num !-- particle index
-!!$
-!!$        IF (this%id(1,k) == 500) THEN
-!!$           
-!!$     
-!!$           !-- The Delta tensor of particle K is calculated at all previous times --
-!!$           DO T = 1, Npoints_integration
-!!$              DO J = 1, dim
-!!$                 DO I = 1, dim
-!!$                    n = (I-1)*dim + J
-!!$                    Delta(I,J) = this%gradx_prev((n-1)*Npoints_integration+T, K)
-!!$                 ENDDO
-!!$              ENDDO
-!!$
-!!$              !-- Tensor E  are calculated. E is the inverse of Delta --
-!!$              IF (dim == 2) THEN
-!!$                 det = Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1)
-!!$                 E(1,1) = Delta(2,2)/det
-!!$                 E(2,1) = -Delta(2,1)/det
-!!$                 E(1,2) = -Delta(1,2)/det
-!!$                 E(2,2) = Delta(1,1)/det
-!!$              ELSE !-- dim == 3 --
-!!$                 det = Delta(1,1) * Delta(2,2) * Delta(3,3) + &
-!!$                      Delta(1,2) * Delta(2,3) * Delta(3,1) + &
-!!$                      Delta(2,1) * Delta(3,2) * Delta(1,3) - &
-!!$                      Delta(1,3) * Delta(2,2) * Delta(3,1) - &
-!!$                      Delta(2,3) * Delta(3,2) * Delta(1,1) - &
-!!$                      Delta(1,2) * Delta(2,1) * Delta(3,3)
-!!$                 E(1,1) = (Delta(2,2)*Delta(3,3) - Delta(2,3)*Delta(3,2))/det
-!!$                 E(2,1) = -(Delta(2,1)*Delta(3,3) - Delta(2,3)*Delta(3,1))/det
-!!$                 E(3,1) = (Delta(2,1)*Delta(3,2) - Delta(2,2)*Delta(3,1))/det
-!!$                 E(1,2) = -(Delta(1,2)*Delta(3,3) - Delta(1,3)*Delta(3,2))/det
-!!$                 E(2,2) = (Delta(1,1)*Delta(3,3) - Delta(1,3)*Delta(3,1))/det
-!!$                 E(3,2) = -(Delta(1,1)*Delta(3,2) - Delta(1,2)*Delta(3,1))/det
-!!$                 E(1,3) = (Delta(1,2)*Delta(2,3) - Delta(1,3)*Delta(2,2))/det
-!!$                 E(2,3) = -(Delta(1,1)*Delta(2,3) - Delta(1,3)*Delta(2,1))/det
-!!$                 E(3,3) = (Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1))/det
-!!$              ENDIF
-!!$
-!!$              gamma0(:,:,T) = -MATMUL(E, Transpose(E))
-!!$              DO I = 1, dim
-!!$                 gamma0(I,I,T) = gamma0(I,I,T) + 1.0_MK
-!!$              ENDDO
-!!$
-!!$              
-!!$           ENDDO
-!!$
-!!$           !-- If steps_since_last_saved_pos == 0, it is difficult to calculate the
-!!$           !   stress with precision, so we are going to keep, in this case, the stress from the previous
-!!$           !   step.
-!!$           DO J = 1, dim ! --- row direction
-!!$              
-!!$              DO I = 1, dim  ! | column direction
-!!$           
-!!$                 !-- Integration is done --
-!!$                 ! The integration is done in two parts. The relevant points to integrate are
-!!$                 ! -s0 - N fi *** ... *** -s0 - 3 fi *** -s0 - 2 fi *** -s0 - fi *** -s0 *** Curr time(0)
-!!$                 ! where s0 is steps_since_last_saved_pos, and fi the frequency which we are storing
-!!$                 ! the previous positions
-!!$                 ! The first part of the integration, between -s0 - N fi and -s0 - fi is done
-!!$                 ! with a Simpson's rule. 
-!!$                 ! The second part of the integration, between -s0-fi, -s0 and 0 times is done by 
-!!$                 ! interpolating a polynomial on those points and integrating it.
-!!$                 DO T = 1, (Npoints_integration-1) !-- Variables at previous time steps --- 
-!!$                    T0     = T
-!!$                    T0_mem = freq_integration * T0 - steps_since_last_saved_pos 
-!!$                    gamma0_a(I,J) = gamma0(I,J,T)
-!!$                    write(*,'(A, 2I, 5E20.10)') 'mmm ',T0_mem, T, mem_function(T0_mem), &
-!!$                         gamma0(1,1,T), gamma0(1,2,T), gamma0(2,1,T), gamma0(2,2,T)
-!!$                 ENDDO
-!!$
-!!$                 scratch_tensor(:,:) = 0.0_MK
-!!$                 DO T = 1, (Npoints_integration-1)/2 !-- Variables at previous time steps ---
-!!$              
-!!$                    T0     = 2*T
-!!$                    T0_mem = freq_integration * T0 - steps_since_last_saved_pos 
-!!$                    
-!!$                    !--- The tensor gamma_[0] and the memory function are found ---
-!!$                    gamma0_a(I,J) = gamma0(I,J,T0 - 1)
-!!$                    gamma0_b(I,J) = gamma0(I,J,T0)
-!!$                    gamma0_c(I,J) = gamma0(I,J,T0 + 1)
-!!$                    mem_functiona = mem_function(T0_mem - freq_integration)
-!!$                    mem_functionb = mem_function(T0_mem)
-!!$                    mem_functionc = mem_function(T0_mem + freq_integration)                      
-!!$                    
-!!$                    !-- Simpson's rule --
-!!$                    scratch_tensor(I, J) = scratch_tensor(I,J) + (mem_functiona * gamma0_a(I,J) + &
-!!$                         4.0_MK * mem_functionb * gamma0_b(I,J) + &
-!!$                         mem_functionc * gamma0_c(I,J))
-!!$                    
-!!$                 ENDDO
-!!$                 scratch_tensor(I,J) = - scratch_tensor(I,J)* dt * freq_integration / 3.0_MK
-!!$
-!!$                 WRITE(*,'(A,2I, 1E20.10)') 'iii ', I, J, scratch_tensor(I,J)
-!!$                 
-!!$                 !-- The part of the integration closer to the current time is done now. 
-!!$                 !   It is done analytically. The integration is done between steps 
-!!$                 !  -s0-fint, and current one (0), which corresponds to an integration between
-!!$                 !  t_cut and zero, being  t_cut = -(s0+fint) * dt
-!!$                 !---------------------------------------------------------------------
-!!$                 
-!!$                 !---------------------------------------
-!!$                 ! Convert array notation to matrix
-!!$                 ! notation for clarity.
-!!$                 !---------------------------------------
-!!$!                 t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
-!!$                 
-!!$                 !-- The analytic calculation is added to the pressure tensor
-!!$!                 this%pt(I,J,K) = this%pt(I,J,K) + t_vgt(I,J) * integral
-!!$
-!!$              ENDDO
-!!$
-!!$           ENDDO
-!!$
-!!$        ENDIF
-!!$
-!!$     ENDDO
-!!$  ENDIF
-!*************************************************
-
   DO K = 1, num !-- particle index
 
      !-- The Delta tensor of particle K is calculated at all previous times --
@@ -434,7 +317,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
            ENDDO
         ENDDO
 
-        !-- Tensor E  are calculated. E is the inverse of Delta --
+        !-- Tensor E is calculated. E is the inverse of Delta --
         IF (dim == 2) THEN
            det = Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1)
            E(1,1) = Delta(2,2)/det
@@ -494,7 +377,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
               mem_functiona = mem_function(T0_mem - freq_integration)
               mem_functionb = mem_function(T0_mem)
               mem_functionc = mem_function(T0_mem + freq_integration)                      
-
+              
               !-- Simpson's rule --
               this%pt(I, J, K) = this%pt(I, J, K) + &
                    (mem_functiona * gamma0_a(I,J) + &
@@ -513,18 +396,26 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, s
            !---------------------------------------
            ! Convert array notation to matrix
            ! notation for clarity.
-           !---------------------------------------
+           !---------------------------------------           
            t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
 
            !-- The analytic calculation is added to the pressure tensor
            this%pt(I,J,K) = this%pt(I,J,K) + t_vgt(I,J) * integral
 
+           !-- The pressure is added --
+           IF ( I == J )  THEN
+!!$              !-- The osmotic pressure G is also added --
+!!$              this%pt(I,J,K) = this%pt(I,J,K) + this%p(K) + G
+              this%pt(I,J,K) = this%pt(I,J,K) + this%p(K)
+           END IF
+
+
         ENDDO
 
      ENDDO
 
-  ENDDO
 
+  ENDDO
 
 9999 CONTINUE      
 

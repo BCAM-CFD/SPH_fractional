@@ -36,3 +36,6 @@
 
 bkp*/
 code_bkp*/
+*.F90~
+*.inc~
+mcf

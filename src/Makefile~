@@ -175,7 +175,7 @@ ECHO_N = -n
 ECHO_T = 
 EXEEXT = 
 FC = mpif90 -fc=ifort
-FCFLAGS = -I/home/avazquez/prefix-mcf/include -g -O2 -debug extended -traceback
+FCFLAGS = -I/home/avazquez/prefix-mcf/include  -O2 -g -traceback -check all -check bounds -debug all
 FCFLAGS_F90 = 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
