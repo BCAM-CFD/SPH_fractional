@@ -231,7 +231,7 @@
         evec(:,:)       = 0.0_MK
         evec_normalize  = .FALSE.
         evec_tolerance  = mcf_machine_zero
-        
+
         num_colloid   = 0
       
         NULLIFY(colloids)
@@ -788,8 +788,6 @@
              !-----------------------------------------------
              ! number of molecules dumbbells.
              !-----------------------------------------------
-             
-             WRITE(*,*) 'n_p = ', n_p
              
              CALL physics_set_n_p(phys, n_p,stat_info_sub)
              

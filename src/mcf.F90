@@ -740,13 +740,14 @@
               !   reprogram this **
                  PRINT *, __FILE__, __LINE__, &
                       "mcf.F90 file: restarting from previous simulations with &
-                      the fractional model is not programmed." 
-                 stat_info = -1
-                 GOTO 9999
+                      the fractional model only considers the positions of the particles. &
+                      If we want the history of the fluid to be preserved from previous &
+                      simulations, we should program it." 
+!!$                 stat_info = -1
+!!$                 GOTO 9999
 
-              !********** Commented by Adolfo for the fractional model **********                 
-!!$                 CALL io_read_conformation(mcf_io,rank,&
-!!$                      mcf_particles,stat_info_sub)
+                 CALL io_read_conformation(mcf_io,rank,&
+                      mcf_particles,stat_info_sub)
                  
               END IF
               
@@ -839,8 +840,6 @@
                 l_map_x   = .TRUE., l_map_v = .TRUE., &
                 l_map_rho = .TRUE., l_map_m = .TRUE., &
                 l_map_id  = .TRUE.,  &
-                l_map_dx_prev  = (.NOT. Newtonian), &
-                l_map_x_old  = (.NOT. Newtonian), &
                 stat_info = stat_info_sub)
            !***************************************
 
