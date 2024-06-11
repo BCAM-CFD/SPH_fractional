@@ -77,21 +77,20 @@
         ! of Non-Newtonian fluids.
       	!----------------------------------------------------
 
-        !**** Commented by Adolfo for the integral fractional model *******        
-!!$        IF ( this%write_conformation ) THEN
-!!$           
-!!$           CALL io_write_conformation(this,&
-!!$                rank,step,parts,num_part,&
-!!$                stat_info_sub)
-!!$           
-!!$           IF (stat_info_sub /= 0) THEN
-!!$              PRINT *, 'io_write : ',&
-!!$                   'Writing conformation tensor failed !'
-!!$              stat_info = -1
-!!$              GOTO 9999
-!!$           END IF
-!!$           
-!!$        END IF
+        IF ( this%write_conformation ) THEN
+           
+           CALL io_write_conformation(this,&
+                rank,step,parts,num_part,&
+                stat_info_sub)
+           
+           IF (stat_info_sub /= 0) THEN
+              PRINT *, 'io_write : ',&
+                   'Writing conformation tensor failed !'
+              stat_info = -1
+              GOTO 9999
+           END IF
+           
+        END IF
         
         !----------------------------------------------------
         ! Done by rank=0 process.

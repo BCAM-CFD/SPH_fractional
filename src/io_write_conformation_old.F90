@@ -78,11 +78,6 @@
         REAL(MK), DIMENSION(:,:)  , POINTER     :: eval
         REAL(MK), DIMENSION(:,:)  , POINTER     :: evec
         REAL(MK), DIMENSION(:,:)  , POINTER     :: output
-        !****** Added by Adolfo for the integral fractional model *******
-        REAL(MK), DIMENSION(:), POINTER     :: p
-        INTEGER :: counter
-        INTEGER :: k
-        !****************************************************************
 
         CHARACTER(LEN=MAX_CHAR)                 :: file_name
         INTEGER                                 :: file_fmt
@@ -95,7 +90,7 @@
         
         CHARACTER(LEN=MAX_CHAR)                 :: cbuf
         INTEGER					:: clen
-
+        
 	!----------------------------------------------------
       	! Initialization of variables.
       	!----------------------------------------------------
@@ -111,9 +106,6 @@
         NULLIFY(eval)
         NULLIFY(evec)
         NULLIFY(output)
-        !*************** Added by Adolfo for the fractional integral model **********
-        NULLIFY(p)
-        !****************************************************************************
         
         read_external  = &
              control_get_read_external(this%ctrl,stat_info_sub)
@@ -126,27 +118,21 @@
         CALL particles_get_pid(d_particles,pid,num_part,stat_info_sub)
         CALL particles_get_vgt(d_particles,vgt,num_part,stat_info_sub)
         CALL particles_get_pt(d_particles,pt,num_part,stat_info_sub)
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$           CALL particles_get_ct(d_particles,ct,num_part,stat_info_sub)
-!!$        ELSE
-!!$           CALL particles_get_eval(d_particles,eval,num_part,stat_info_sub)
-!!$           CALL particles_get_evec(d_particles,evec,num_part,stat_info_sub)           
-!!$        ENDIF
-        !******* Added by Adolfo for the fractional integral model ***********
-        CALL particles_get_p(d_particles,p,num_part,stat_info_sub)
-        !*********************************************************************
+        IF (.NOT.(eigen_dynamics)) THEN
+           CALL particles_get_ct(d_particles,ct,num_part,stat_info_sub)
+        ELSE
+           CALL particles_get_eval(d_particles,eval,num_part,stat_info_sub)
+           CALL particles_get_evec(d_particles,evec,num_part,stat_info_sub)           
+        ENDIF
 
-        !***** Modified by Adolfo for the integral fractional model ********
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$           !--- Modified by Adolfo ---
-!!$!           data_dim = dim + 1 + dim**2 + dim**2 + dim**2
-!!$           data_dim = dim + 1 + dim**2 
-!!$        ELSE
-!!$!           data_dim = dim + 1 + dim**2 + dim**2 + dim + dim**2
-!!$           data_dim = dim + 1 + dim + dim**2
-!!$        ENDIF
-        data_dim = dim + 1 + dim**2
-        !*********************************************************************
+        IF (.NOT.(eigen_dynamics)) THEN
+           !--- Modified by Adolfo ---
+!           data_dim = dim + 1 + dim**2 + dim**2 + dim**2
+           data_dim = dim + 1 + dim**2 
+        ELSE
+!           data_dim = dim + 1 + dim**2 + dim**2 + dim + dim**2
+           data_dim = dim + 1 + dim + dim**2
+        ENDIF
         
         ALLOCATE(output(data_dim,num_part))
 
@@ -170,45 +156,31 @@
 !        cur_dim = cur_dim + dim**2 
         !*************************************************
 
-        !****Commented by Adolfo for the integral fractional model ********
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$        !********** Changed by Adolfo ************
-!!$        !** To avoid a run-time error in hpcwales ****        
-!!$!           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
-!!$!                ct(1:dim**2,1:num_part)
-!!$           DO I = 1, num_part
-!!$              output(cur_dim:cur_dim+dim**2-1,I) = &
-!!$                ct(1:dim**2,I)
-!!$           ENDDO
-!!$           !***********************************
-!!$
-!!$           
-!!$           cur_dim = cur_dim + dim**2 
-!!$        ELSE
-!!$
-!!$           output(cur_dim:cur_dim+dim-1,1:num_part) = &
-!!$                eval(1:dim,1:num_part)
-!!$
-!!$           cur_dim = cur_dim + dim 
-!!$
-!!$           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
-!!$                evec(1:dim**2,1:num_part)
-!!$           
-!!$           cur_dim = cur_dim + dim**2 
-!!$        ENDIF
-
-        !********* Added by Adolfo for the integral fractional model ********
-        counter = 0
-        DO J = 1, dim
-           DO K = 1, dim
-              output(cur_dim + counter,1:num_part) = pt(J, K, 1:num_part)
-              IF (J == K) THEN
-                 output(cur_dim + counter,1:num_part) = pt(J, K, 1:num_part) - p(1:num_part)
-              ENDIF
-              counter = counter + 1
+        IF (.NOT.(eigen_dynamics)) THEN
+        !********** Changed by Adolfo ************
+        !** To avoid a run-time error in hpcwales ****        
+!           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
+!                ct(1:dim**2,1:num_part)
+           DO I = 1, num_part
+              output(cur_dim:cur_dim+dim**2-1,I) = &
+                ct(1:dim**2,I)
            ENDDO
-        ENDDO
-        !********************************************************************
+           !***********************************
+
+           
+           cur_dim = cur_dim + dim**2 
+        ELSE
+
+           output(cur_dim:cur_dim+dim-1,1:num_part) = &
+                eval(1:dim,1:num_part)
+
+           cur_dim = cur_dim + dim 
+
+           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
+                evec(1:dim**2,1:num_part)
+           
+           cur_dim = cur_dim + dim**2 
+        ENDIF
 
         !*********** Commented by Adolfo *********
 !        do i = 1, dim
@@ -262,7 +234,13 @@
            GOTO 9999
         END IF
         
+        !************ Changed by Adolfo ********
         WRITE(cbuf,'(A1,I2,A6)') '(', data_dim ,'E16.8)'
+        IF (.NOT.(eigen_dynamics)) THEN
+           cbuf = '(3E12.4, E16.8, 9E12.4)'
+        ELSE
+           cbuf = '(3E12.4, E16.8, 12E12.4)'
+        ENDIF
         clen = LEN_TRIM(cbuf)         
         
         CALL ppm_io(file_unit,output,ppm_param_io_write,&
@@ -326,12 +304,6 @@
         IF (ASSOCIATED(output)) THEN
            DEALLOCATE(output)
         END IF
-
-        !*********** Added by Adolfo for the fractional integral model ********
-        IF (ASSOCIATED(p)) THEN
-           DEALLOCATE(p)
-        END IF
-        !**********************************************************************
         
         RETURN	
         
