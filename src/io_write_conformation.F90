@@ -203,7 +203,7 @@
            DO K = 1, dim
               output(cur_dim + counter,1:num_part) = pt(J, K, 1:num_part)
               IF (J == K) THEN
-                 output(cur_dim + counter,1:num_part) = pt(J, K, 1:num_part) - p(1:num_part)
+                 output(cur_dim + counter,1:num_part) = p(1:num_part) - pt(J, K, 1:num_part)
               ENDIF
               counter = counter + 1
            ENDDO
