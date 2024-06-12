@@ -628,6 +628,36 @@
       END FUNCTION physics_get_beta
       !******************************************************************
 
+      !*********** Added by Adolfo for the fractional model *************
+      REAL(MK) FUNCTION physics_get_a_damping(this,stat_info)
+        
+        TYPE(Physics), INTENT(IN)       :: this
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        physics_get_a_damping = this%a_damping
+        
+        RETURN
+        
+      END FUNCTION physics_get_a_damping
+      !******************************************************************
+
+      !*********** Added by Adolfo for the fractional model *************
+      REAL(MK) FUNCTION physics_get_b_damping(this,stat_info)
+        
+        TYPE(Physics), INTENT(IN)       :: this
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        physics_get_b_damping = this%b_damping
+        
+        RETURN
+        
+      END FUNCTION physics_get_b_damping
+      !******************************************************************            
+
 !************** Added by Adolfo **********
       REAL(MK) FUNCTION physics_get_a(this,stat_info)
         
@@ -654,6 +684,8 @@
         RETURN
         
       END FUNCTION physics_get_b
+
+      
 !*************** END OF ADDED BY ADOLFO ******************
       
 

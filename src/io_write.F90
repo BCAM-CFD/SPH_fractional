@@ -77,6 +77,7 @@
         ! of Non-Newtonian fluids.
       	!----------------------------------------------------
 
+        !**** Commented by Adolfo for the integral fractional model *******        
         IF ( this%write_conformation ) THEN
            
            CALL io_write_conformation(this,&

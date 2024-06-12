@@ -825,6 +825,38 @@
       !********************************************************
 
       !**** Added by Adolfo for the integral fractional model ****
+      SUBROUTINE physics_set_a_damping(this,d_a_damping,stat_info)
+        
+        TYPE(Physics), INTENT(INOUT)    :: this
+        REAL(MK), INTENT(IN)            :: d_a_damping
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        this%a_damping =  d_a_damping
+        
+        RETURN
+        
+      END SUBROUTINE physics_set_a_damping
+      !********************************************************
+
+      !**** Added by Adolfo for the integral fractional model ****
+      SUBROUTINE physics_set_b_damping(this,d_b_damping,stat_info)
+        
+        TYPE(Physics), INTENT(INOUT)    :: this
+        REAL(MK), INTENT(IN)            :: d_b_damping
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        stat_info = 0
+        
+        this%b_damping =  d_b_damping
+        
+        RETURN
+        
+      END SUBROUTINE physics_set_b_damping
+      !********************************************************            
+
+      !**** Added by Adolfo for the integral fractional model ****
       SUBROUTINE physics_set_Nsteps_memory(this,d_Nsteps_memory,stat_info)
         
         TYPE(Physics), INTENT(INOUT)    :: this

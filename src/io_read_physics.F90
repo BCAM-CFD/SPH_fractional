@@ -89,6 +89,8 @@
         INTEGER                         :: freq_integration
         LOGICAL                         :: control
         INTEGER                         :: steps_since_last_saved_pos
+        REAL(MK)                        :: a_damping !--McKinley model 2014 --
+        REAL(MK)                        :: b_damping !--McKinley model 2014 --        
         !***********************************************************
 	REAL(MK)                        :: tau_sm
 	REAL(MK)                        :: k_sm
@@ -231,6 +233,12 @@
         evec(:,:)       = 0.0_MK
         evec_normalize  = .FALSE.
         evec_tolerance  = mcf_machine_zero
+
+
+        ! ********* Added by Luca for the integral fractional model ****
+        ! THey default to "damping off"
+        a_damping       = 0.0_MK
+        b_damping       = 1.0_MK
 
         num_colloid   = 0
       
@@ -893,6 +901,27 @@
              steps_since_last_saved_pos = 0
              CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub) 
              !************************************************************
+
+           !**** Added by Adolfo for the integral fractional model ****
+           ELSE IF (carg == 'A_DAMPING') THEN
+             
+             !-----------------------------------------------
+             ! a fit parameter from McKinley model 2014
+             !-----------------------------------------------
+             
+             READ(cvalue,*,IOSTAT=ios,ERR=200) a_damping
+             CALL physics_set_a_damping(phys,a_damping,stat_info_sub)
+
+           !**** Added by Adolfo for the integral fractional model ****
+           ELSE IF (carg == 'B_DAMPING') THEN
+             
+             !-----------------------------------------------
+             ! b fit parameter from McKinley model 2014
+             !-----------------------------------------------
+             
+             READ(cvalue,*,IOSTAT=ios,ERR=200) b_damping
+             CALL physics_set_b_damping(phys,b_damping,stat_info_sub)             
+             
 
           ELSE IF (carg == 'EIGEN_DYNAMICS') THEN
              
