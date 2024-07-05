@@ -290,6 +290,8 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   CALL mittag_leffler(Mit_Lef, x, alpha-beta, 2.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)     
 
   ! The one used now
+  ! The memory is not computed from eq (23) Santelli 2024, but rather as a chain starting from
+  ! the relax modulus. Here we compute the term necessary for the analytical part of eq (36).
   integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   ! The one I gave Luca to test.
   ! integral = ((-tcut) * relax_modulus  - G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
@@ -397,7 +399,12 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
                    mem_functionc * gamma0_c(I,J))
 
            ENDDO
-           this%pt(I,J,K) = - this%pt(I,J,K) * dt * freq_integration / 3.0_MK
+           ! --- IGNORE THIS
+           ! We get -pt because eq (31) from paper assumes a minus in front of M(t-t').
+           ! We don't have a minus there, so we put a minus.
+           ! --- NOW ITS CORRECT
+           ! Mem functions is correctly computed as -G*..., so tau = mem_fun*gamma is correct
+           this%pt(I,J,K) = + this%pt(I,J,K) * dt * freq_integration / 3.0_MK
 
            !-- The part of the integration closer to the current time is done now. 
            !   It is done analytically. The integration is done between steps 
@@ -412,7 +419,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
            t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
 
            !-- The analytic calculation is added to the pressure tensor
-           this%pt(I,J,K) = this%pt(I,J,K) + t_vgt(I,J) * integral
+           this%pt(I,J,K) = - (this%pt(I,J,K) + t_vgt(I,J) * integral )
 
            !-- The pressure is added --
            IF ( I == J )  THEN

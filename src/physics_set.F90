@@ -986,7 +986,7 @@
 !!$                   G**2.0_MK / V * (alpha-beta) * tol**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
 !!$           ENDIF
 
-
+          ! equation (23)
            CALL mittag_leffler(Mit_Lef, x, alpha-beta, -beta, 5, 1000, 1.0E-9_MK, stat_info)
            IF (stat_info == -1) THEN
               GOTO 1000 !-- End of subroutine --
@@ -1000,9 +1000,9 @@
            !    rheology of multiscale complex fluids
            !         by   Aditya Jaishankar and Gareth H. McKinley
            IF (Delta_t .NE. 0) THEN            
-              this%mem_function(I) = G * Delta_t**(-beta-1.0_MK) * Mit_lef
+              this%mem_function(I) = - G * Delta_t**(-beta-1.0_MK) * Mit_lef
            ELSE
-              this%mem_function(I) = G * tol**(-beta-1.0_MK) * Mit_lef
+              this%mem_function(I) = - G * tol**(-beta-1.0_MK) * Mit_lef
            ENDIF
 
 !!$           !**** Avoiding divergency ****

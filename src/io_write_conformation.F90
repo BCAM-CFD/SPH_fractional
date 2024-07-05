@@ -145,7 +145,8 @@
 !!$!           data_dim = dim + 1 + dim**2 + dim**2 + dim + dim**2
 !!$           data_dim = dim + 1 + dim + dim**2
 !!$        ENDIF
-        data_dim = dim + 1 + dim**2
+        data_dim = dim + 1 + dim**2 + 1 
+        !the last +1 is for the pressure
         !*********************************************************************
         
         ALLOCATE(output(data_dim,num_part))
@@ -199,15 +200,17 @@
 
         !********* Added by Adolfo for the integral fractional model ********
         counter = 0
-        DO J = 1, dim
-           DO K = 1, dim
-              output(cur_dim + counter,1:num_part) = pt(J, K, 1:num_part)
+        DO K = 1, dim
+           DO J = 1, dim
+              output(cur_dim + counter,1:num_part) = - pt(J, K, 1:num_part)
               IF (J == K) THEN
-                 output(cur_dim + counter,1:num_part) = p(1:num_part) - pt(J, K, 1:num_part)
+                 output(cur_dim + counter,1:num_part) = - ( pt(J, K, 1:num_part) - p(1:num_part) )
               ENDIF
               counter = counter + 1
            ENDDO
         ENDDO
+        cur_dim = cur_dim + 1
+        output(cur_dim, 1:num_part) = p(1:num_part)
         !********************************************************************
 
         !*********** Commented by Adolfo *********
