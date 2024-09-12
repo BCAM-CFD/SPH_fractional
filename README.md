@@ -1,7 +1,7 @@
 # SPH_fractional
 
 <p>
-<img src="https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png" height="200rm" align="right">
+<img src="https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png" height="500rm" align="right">
  
 ---------------------------- DESCRIPTION ------------------------
 
