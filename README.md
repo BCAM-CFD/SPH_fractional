@@ -3,7 +3,7 @@
 <p>
 <img src="https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png" height="400rm" align="right">
  
----------------------------- DESCRIPTION ------------------------
+---------DESCRIPTION ----------
 
  Code for simulating fluids using the SPH integral viscoelastic method.
  A fractional model for the constitutive equation has been implemented.
