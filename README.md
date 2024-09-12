@@ -1,7 +1,8 @@
 # SPH_fractional
 
-![alt text](https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png height="200rm")
-
+<p>
+<img src="https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png" height="200rm" align="right">
+ 
 ---------------------------- DESCRIPTION ------------------------
 
  Code for simulating fluids using the SPH integral viscoelastic method.
