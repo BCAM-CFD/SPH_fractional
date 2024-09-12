@@ -1,6 +1,7 @@
 ![alt text](https://github.com/BCAM-CFD/SPH_fractional/blob/fractional_development/fractional_Maxwell_rheology.png)
 
 ---------------------------- DESCRIPTION ------------------------
+
  Code for simulating fluids using the SPH integral viscoelastic method.
  A fractional model for the constitutive equation has been implemented.
  Reference:
@@ -23,12 +24,11 @@
      Adolfo Vazquez-Quesada.
      Luca Santelli
 
- Contact: a.vazquez-quesada@fisfun.uned.es
- 	   lsantelli@bcamath.org
-           mellero@bcamath.org
+ Contact: a.vazquez-quesada@fisfun.uned.es, lsantelli@bcamath.org, mellero@bcamath.org
 --------------------------------------------------------------------
 
 -------------------------- INSTALLATION -------------------------------
+
 After download MCF/mcf/ folder,
 I suppose you have already installed PPM library
 in a proper path,
@@ -73,6 +73,7 @@ to compile mcf code,
 to install mcf executable binary at ...../mcf/mcf_install/ folder.
 
 -------------- USE -----------------------------------------------
+
 Three input files are required to launch a simulation. Examples of
 these input files can be found in the 'mcf_config' directory. The
 details of the inputs are explained within those files.
