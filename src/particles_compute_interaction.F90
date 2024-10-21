@@ -53,13 +53,23 @@ SUBROUTINE particles_compute_interaction(this,stat_info)
   !
   !               V0.1 16.03 2009, original
   !----------------------------------------------------
-  ! Author      : Xin Bian 
-  ! Contact     : xin.bian@aer.mw.tum.de
-  !
-  ! Dr. Marco Ellero's Emmy Noether Group,
-  ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-  ! Faculty of Mechanical Engineering,
-  ! Technische Universitaet Muenchen, Germany.
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
+        !
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
   !----------------------------------------------------
 
   !----------------------------------------------------

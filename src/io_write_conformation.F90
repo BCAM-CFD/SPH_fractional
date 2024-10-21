@@ -24,13 +24,23 @@
         !              V0.1 03.08.2009, original version.
         !
         !-------------------------------------------------------------
-        ! Author      : Xin Bian
-        ! Contact     : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !-------------------------------------------------------------
         
         !----------------------------------------------------
@@ -78,11 +88,6 @@
         REAL(MK), DIMENSION(:,:)  , POINTER     :: eval
         REAL(MK), DIMENSION(:,:)  , POINTER     :: evec
         REAL(MK), DIMENSION(:,:)  , POINTER     :: output
-        !****** Added by Adolfo for the integral fractional model *******
-        REAL(MK), DIMENSION(:), POINTER     :: p
-        INTEGER :: counter
-        INTEGER :: k
-        !****************************************************************
 
         CHARACTER(LEN=MAX_CHAR)                 :: file_name
         INTEGER                                 :: file_fmt
@@ -95,7 +100,7 @@
         
         CHARACTER(LEN=MAX_CHAR)                 :: cbuf
         INTEGER					:: clen
-
+        
 	!----------------------------------------------------
       	! Initialization of variables.
       	!----------------------------------------------------
@@ -111,9 +116,6 @@
         NULLIFY(eval)
         NULLIFY(evec)
         NULLIFY(output)
-        !*************** Added by Adolfo for the fractional integral model **********
-        NULLIFY(p)
-        !****************************************************************************
         
         read_external  = &
              control_get_read_external(this%ctrl,stat_info_sub)
@@ -126,28 +128,21 @@
         CALL particles_get_pid(d_particles,pid,num_part,stat_info_sub)
         CALL particles_get_vgt(d_particles,vgt,num_part,stat_info_sub)
         CALL particles_get_pt(d_particles,pt,num_part,stat_info_sub)
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$           CALL particles_get_ct(d_particles,ct,num_part,stat_info_sub)
-!!$        ELSE
-!!$           CALL particles_get_eval(d_particles,eval,num_part,stat_info_sub)
-!!$           CALL particles_get_evec(d_particles,evec,num_part,stat_info_sub)           
-!!$        ENDIF
-        !******* Added by Adolfo for the fractional integral model ***********
-        CALL particles_get_p(d_particles,p,num_part,stat_info_sub)
-        !*********************************************************************
+        IF (.NOT.(eigen_dynamics)) THEN
+           CALL particles_get_ct(d_particles,ct,num_part,stat_info_sub)
+        ELSE
+           CALL particles_get_eval(d_particles,eval,num_part,stat_info_sub)
+           CALL particles_get_evec(d_particles,evec,num_part,stat_info_sub)           
+        ENDIF
 
-        !***** Modified by Adolfo for the integral fractional model ********
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$           !--- Modified by Adolfo ---
-!!$!           data_dim = dim + 1 + dim**2 + dim**2 + dim**2
-!!$           data_dim = dim + 1 + dim**2 
-!!$        ELSE
-!!$!           data_dim = dim + 1 + dim**2 + dim**2 + dim + dim**2
-!!$           data_dim = dim + 1 + dim + dim**2
-!!$        ENDIF
-        data_dim = dim + 1 + dim**2 + 1 
-        !the last +1 is for the pressure
-        !*********************************************************************
+        IF (.NOT.(eigen_dynamics)) THEN
+           !--- Modified by Adolfo ---
+!           data_dim = dim + 1 + dim**2 + dim**2 + dim**2
+           data_dim = dim + 1 + dim**2 
+        ELSE
+!           data_dim = dim + 1 + dim**2 + dim**2 + dim + dim**2
+           data_dim = dim + 1 + dim + dim**2
+        ENDIF
         
         ALLOCATE(output(data_dim,num_part))
 
@@ -171,47 +166,31 @@
 !        cur_dim = cur_dim + dim**2 
         !*************************************************
 
-        !****Commented by Adolfo for the integral fractional model ********
-!!$        IF (.NOT.(eigen_dynamics)) THEN
-!!$        !********** Changed by Adolfo ************
-!!$        !** To avoid a run-time error in hpcwales ****        
-!!$!           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
-!!$!                ct(1:dim**2,1:num_part)
-!!$           DO I = 1, num_part
-!!$              output(cur_dim:cur_dim+dim**2-1,I) = &
-!!$                ct(1:dim**2,I)
-!!$           ENDDO
-!!$           !***********************************
-!!$
-!!$           
-!!$           cur_dim = cur_dim + dim**2 
-!!$        ELSE
-!!$
-!!$           output(cur_dim:cur_dim+dim-1,1:num_part) = &
-!!$                eval(1:dim,1:num_part)
-!!$
-!!$           cur_dim = cur_dim + dim 
-!!$
-!!$           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
-!!$                evec(1:dim**2,1:num_part)
-!!$           
-!!$           cur_dim = cur_dim + dim**2 
-!!$        ENDIF
-
-        !********* Added by Adolfo for the integral fractional model ********
-        counter = 0
-        DO K = 1, dim
-           DO J = 1, dim
-              output(cur_dim + counter,1:num_part) = - pt(J, K, 1:num_part)
-              IF (J == K) THEN
-                 output(cur_dim + counter,1:num_part) = - ( pt(J, K, 1:num_part) - p(1:num_part) )
-              ENDIF
-              counter = counter + 1
+        IF (.NOT.(eigen_dynamics)) THEN
+        !********** Changed by Adolfo ************
+        !** To avoid a run-time error in hpcwales ****        
+!           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
+!                ct(1:dim**2,1:num_part)
+           DO I = 1, num_part
+              output(cur_dim:cur_dim+dim**2-1,I) = &
+                   ct(1:dim**2,I)
            ENDDO
-        ENDDO
-        cur_dim = cur_dim + 1
-        output(cur_dim, 1:num_part) = p(1:num_part)
-        !********************************************************************
+           !***********************************
+
+           
+           cur_dim = cur_dim + dim**2 
+        ELSE
+
+           output(cur_dim:cur_dim+dim-1,1:num_part) = &
+                eval(1:dim,1:num_part)
+
+           cur_dim = cur_dim + dim 
+
+           output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
+                evec(1:dim**2,1:num_part)
+           
+           cur_dim = cur_dim + dim**2 
+        ENDIF
 
         !*********** Commented by Adolfo *********
 !        do i = 1, dim
@@ -265,7 +244,21 @@
            GOTO 9999
         END IF
         
+        !************ Changed by Adolfo ********
         WRITE(cbuf,'(A1,I2,A6)') '(', data_dim ,'E16.8)'
+        IF (.NOT.(eigen_dynamics)) THEN
+           IF (dim == 3) THEN
+              cbuf = '(3E12.4, E16.8, 9E12.4)'
+           ELSE !dim = 2
+              cbuf = '(2E12.4, E16.8, 4E12.4)'
+           ENDIF
+        ELSE
+           IF (dim == 3) THEN
+              cbuf = '(3E12.4, E16.8, 12E12.4)'
+           ELSE !dim = 2
+              cbuf = '(2E12.4, E16.8, 6E12.4)'
+           ENDIF
+        ENDIF
         clen = LEN_TRIM(cbuf)         
         
         CALL ppm_io(file_unit,output,ppm_param_io_write,&
@@ -329,12 +322,6 @@
         IF (ASSOCIATED(output)) THEN
            DEALLOCATE(output)
         END IF
-
-        !*********** Added by Adolfo for the fractional integral model ********
-        IF (ASSOCIATED(p)) THEN
-           DEALLOCATE(p)
-        END IF
-        !**********************************************************************
         
         RETURN	
         

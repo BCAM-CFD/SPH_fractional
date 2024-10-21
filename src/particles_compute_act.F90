@@ -17,13 +17,23 @@
         !                 I changed the coefficients of the 
         !                 velocity gradient tensor in act
         !----------------------------------------------------
-        ! Author    : Xin Bian
-        ! Contact   : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
         
         !----------------------------------------------------
@@ -120,6 +130,10 @@
 !!$           DO j = 1, dim              
 !!$              DO i = 1, dim
 !!$                 t_c(i,j)   = this%ct(i+dim*(j-1),p)
+            !  i = 1, j = 1  -> 1
+            !  i = 1, j = 2  -> 3
+            !  i = 2, j = 1  -> 2
+            !  i = 2, j = 2  -> 4
 !!$                 t_vgt(i,j) = this%vgt(i+dim*(j-1),p)
 !!$              END DO
 !!$           END DO

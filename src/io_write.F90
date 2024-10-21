@@ -15,13 +15,23 @@
         !                 merge all io_write_* together here.
         !
         !----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
         
         TYPE(IO), INTENT(IN)            :: this
@@ -78,20 +88,20 @@
       	!----------------------------------------------------
 
         !**** Commented by Adolfo for the integral fractional model *******        
-        IF ( this%write_conformation ) THEN
-           
-           CALL io_write_conformation(this,&
-                rank,step,parts,num_part,&
-                stat_info_sub)
-           
-           IF (stat_info_sub /= 0) THEN
-              PRINT *, 'io_write : ',&
-                   'Writing conformation tensor failed !'
-              stat_info = -1
-              GOTO 9999
-           END IF
-           
-        END IF
+!!$        IF ( this%write_conformation ) THEN
+!!$           
+!!$           CALL io_write_conformation(this,&
+!!$                rank,step,parts,num_part,&
+!!$                stat_info_sub)
+!!$           
+!!$           IF (stat_info_sub /= 0) THEN
+!!$              PRINT *, 'io_write : ',&
+!!$                   'Writing conformation tensor failed !'
+!!$              stat_info = -1
+!!$              GOTO 9999
+!!$           END IF
+!!$           
+!!$        END IF
         
         !----------------------------------------------------
         ! Done by rank=0 process.
@@ -207,7 +217,7 @@
            END IF
            
         END IF
-        
+
         !----------------------------------------------------
         ! Write restart conformation tensor file.
         !----------------------------------------------------
@@ -225,6 +235,20 @@
 !!$           END IF
 !!$        END IF
 
+        !********** Added by Adolfo for the integral fractional model ************
+        IF ( this%write_restart_memory ) THEN
+           
+           CALL io_write_restart_memory(this,&
+                 rank,step,parts,num_part,stat_info_sub)
+           
+           IF(stat_info_sub /=0 ) THEN
+              PRINT *,"io_write : ",&
+                   "Step writing restart memory failed !"
+              stat_info = -1
+              GOTO 9999
+           END IF
+        END IF
+        !**************************************************
 
 9999    CONTINUE
         

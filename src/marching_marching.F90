@@ -40,13 +40,23 @@
         !               V0.1 15.07 2009, original version.
         !
         !----------------------------------------------------
-        ! Author      : Xin Bian
-        ! Contact     : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
         
         !----------------------------------------------------
@@ -201,6 +211,9 @@
         LOGICAL                         :: l_write_restart_physics
         LOGICAL                         :: l_write_restart_particles
         LOGICAL                         :: l_write_restart_conformation
+        !****** Added by Adolfo for the integral fractional model *******
+        LOGICAL                         :: l_write_restart_memory
+        !****************************************************************
         
         !----------------------------------------------------
         ! t_x : positions for particles, for building cell
@@ -395,6 +408,7 @@
                 colloids,stat_info_sub)
            coll_sub_time_step = &
                 colloid_get_sub_time_step(colloids,stat_info_sub)
+
            dt_sub_time_step   = dt / coll_sub_time_step
      
            ALLOCATE(coll_drag(num_dim,num_colloid))
@@ -1720,6 +1734,7 @@
         ! We do so by flipping over the write_condition flags.
         !----------------------------------------------------
         
+        !******* Modified by Adolfo for the integral fractional model *********
         CALL io_write_condition_check(this%io,&
              step_current,time_current,&
              l_write_particles,l_write_conformation,&
@@ -1728,7 +1743,18 @@
              l_write_restart_physics, &
              l_write_restart_particles, &
              l_write_restart_conformation, &
+             l_write_restart_memory, &
              stat_info_sub)
+!!$        CALL io_write_condition_check(this%io,&
+!!$             step_current,time_current,&
+!!$             l_write_particles,l_write_conformation,&
+!!$             l_write_colloid,&
+!!$             l_write_statistic,l_write_boundary,&
+!!$             l_write_restart_physics, &
+!!$             l_write_restart_particles, &
+!!$             l_write_restart_conformation, &
+!!$             stat_info_sub)
+        !*********************************************************************
         
         IF( .NOT. l_write_statistic ) THEN
            
@@ -1764,6 +1790,7 @@
               
         END IF
         
+        !******** Modified by Adolfo for the integral fractional model **********
         CALL io_write_condition_set(this%io,&
              .NOT. l_write_particles, &
              .NOT. l_write_conformation,&
@@ -1773,7 +1800,19 @@
              .NOT. l_write_restart_physics  ,&
              .NOT. l_write_restart_particles ,&
              .NOT. l_write_restart_conformation,&
+             .NOT. l_write_restart_memory,&
              stat_info_sub)
+!!$        CALL io_write_condition_set(this%io,&
+!!$             .NOT. l_write_particles, &
+!!$             .NOT. l_write_conformation,&
+!!$             .NOT. l_write_colloid,&
+!!$             .NOT. l_write_statistic,&
+!!$             .NOT. l_write_boundary,&
+!!$             .NOT. l_write_restart_physics  ,&
+!!$             .NOT. l_write_restart_particles ,&
+!!$             .NOT. l_write_restart_conformation,&
+!!$             stat_info_sub)
+        !***************************************************
         
         !----------------------------------------------------
         ! Write final step output.

@@ -22,13 +22,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -117,13 +127,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -212,13 +232,23 @@
       	! Revisions   : V0.1 19.06.2013, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -309,13 +339,23 @@
       	! Revisions   : V0.1 19.06.2013, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -414,13 +454,23 @@
       	! Revisions   : V0.1 19.06.2013, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -510,13 +560,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -605,13 +665,23 @@
       	! Revisions   : V0.1 19.06.2013, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -702,13 +772,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -808,13 +888,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -904,13 +994,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -997,13 +1097,23 @@
       	! Revisions   : V0.1 19.06.2013, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         
@@ -1092,13 +1202,23 @@
       	! Revisions   : V0.1 01.08.2012, original version.
 	!
       	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
       
         

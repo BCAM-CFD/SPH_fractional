@@ -33,13 +33,23 @@
         !               code, we decided to put it seperatedly.
         !
         !----------------------------------------------------
-        ! Author    : Xin Bian
-        ! Contact   : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
         
         !----------------------------------------------------
@@ -194,7 +204,6 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   REAL(MK), DIMENSION(3,3) :: t_vgt
   REAL(MK) :: integral
   REAL(MK), DIMENSION(2,2) :: scratch_tensor !-- Delete after checkings --x
-  REAL(MK) :: a_damping, b_damping
 
   !----------------------------------------------------
   ! Initialization of variables.
@@ -221,8 +230,6 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   E_mod = physics_get_E(this%phys,stat_info_sub)
   freq_integration = physics_get_freq_integration(this%phys,stat_info)
   Npoints_integration = physics_get_Npoints_integration(this%phys,stat_info)
-  a_damping  = physics_get_a_damping(this%phys,stat_info_sub)
-  b_damping  = physics_get_b_damping(this%phys,stat_info_sub)    
 
   CALL physics_get_mem_function(this%phys, mem_function, stat_info_sub)
 
@@ -289,10 +296,8 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   !-- More quantities are calculated --
   CALL mittag_leffler(Mit_Lef, x, alpha-beta, 2.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)     
 
-  ! The one used now
-  ! The memory is not computed from eq (23) Santelli 2024, but rather as a chain starting from
-  ! the relax modulus. Here we compute the term necessary for the analytical part of eq (36).
-  integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
+  ! The one used now 
+   integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   ! The one I gave Luca to test.
   ! integral = ((-tcut) * relax_modulus  - G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   !-----------------------------------------------------------------------
@@ -376,18 +381,9 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
               T0_mem = freq_integration * T0 - steps_since_last_saved_pos 
               
               !--- The tensor gamma_[0] and the memory function are found ---
-              ! --- Maxwell version ---
-!!$              gamma0_a(I,J) = gamma0(I,J,T0 - 1)
-!!$              gamma0_b(I,J) = gamma0(I,J,T0)
-!!$              gamma0_c(I,J) = gamma0(I,J,T0 + 1)
-              ! --- McKinley 2014 version ---              
-              gamma0_a(I,J) = gamma0(I,J,T0 - 1)/(1.0_MK + &
-                   a_damping * gamma0(I,J,T0 - 1)**b_damping)
-              gamma0_b(I,J) = gamma0(I,J,T0)    /(1.0_MK + &
-                   a_damping * gamma0(I,J,T0    )**b_damping)
-              gamma0_c(I,J) = gamma0(I,J,T0 + 1)/(1.0_MK + &
-                   a_damping * gamma0(I,J,T0 + 1)**b_damping)
-              
+              gamma0_a(I,J) = gamma0(I,J,T0 - 1)
+              gamma0_b(I,J) = gamma0(I,J,T0)
+              gamma0_c(I,J) = gamma0(I,J,T0 + 1)
               mem_functiona = mem_function(T0_mem - freq_integration)
               mem_functionb = mem_function(T0_mem)
               mem_functionc = mem_function(T0_mem + freq_integration)                      
@@ -399,12 +395,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
                    mem_functionc * gamma0_c(I,J))
 
            ENDDO
-           ! --- IGNORE THIS
-           ! We get -pt because eq (31) from paper assumes a minus in front of M(t-t').
-           ! We don't have a minus there, so we put a minus.
-           ! --- NOW ITS CORRECT
-           ! Mem functions is correctly computed as -G*..., so tau = mem_fun*gamma is correct
-           this%pt(I,J,K) = + this%pt(I,J,K) * dt * freq_integration / 3.0_MK
+           this%pt(I,J,K) = - this%pt(I,J,K) * dt * freq_integration / 3.0_MK
 
            !-- The part of the integration closer to the current time is done now. 
            !   It is done analytically. The integration is done between steps 
@@ -419,7 +410,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
            t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
 
            !-- The analytic calculation is added to the pressure tensor
-           this%pt(I,J,K) = - (this%pt(I,J,K) + t_vgt(I,J) * integral )
+           this%pt(I,J,K) = this%pt(I,J,K) + t_vgt(I,J) * integral
 
            !-- The pressure is added --
            IF ( I == J )  THEN

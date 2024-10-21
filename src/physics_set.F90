@@ -11,13 +11,23 @@
 !  Revisions    : V0.1 01.03.2009, original version.
 !
 !--------------------------------------------------
-! Author       : Xin Bian
-! Contact      : xin.bian@aer.mw.tum.de
-!
-! Dr. Marco Ellero's Emmy Noether Group,
-! Prof. Dr. N. Adams' Chair of Aerodynamics,
-! Faculty of Mechanical Engineering,
-! Technische Universitaet Muenchen, Germany.
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
+        !
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
 !--------------------------------------------------
 
       SUBROUTINE physics_set_num_species(this,d_num_species,stat_info)
@@ -825,38 +835,6 @@
       !********************************************************
 
       !**** Added by Adolfo for the integral fractional model ****
-      SUBROUTINE physics_set_a_damping(this,d_a_damping,stat_info)
-        
-        TYPE(Physics), INTENT(INOUT)    :: this
-        REAL(MK), INTENT(IN)            :: d_a_damping
-        INTEGER, INTENT(OUT)            :: stat_info
-        
-        stat_info = 0
-        
-        this%a_damping =  d_a_damping
-        
-        RETURN
-        
-      END SUBROUTINE physics_set_a_damping
-      !********************************************************
-
-      !**** Added by Adolfo for the integral fractional model ****
-      SUBROUTINE physics_set_b_damping(this,d_b_damping,stat_info)
-        
-        TYPE(Physics), INTENT(INOUT)    :: this
-        REAL(MK), INTENT(IN)            :: d_b_damping
-        INTEGER, INTENT(OUT)            :: stat_info
-        
-        stat_info = 0
-        
-        this%b_damping =  d_b_damping
-        
-        RETURN
-        
-      END SUBROUTINE physics_set_b_damping
-      !********************************************************            
-
-      !**** Added by Adolfo for the integral fractional model ****
       SUBROUTINE physics_set_Nsteps_memory(this,d_Nsteps_memory,stat_info)
         
         TYPE(Physics), INTENT(INOUT)    :: this
@@ -986,7 +964,7 @@
 !!$                   G**2.0_MK / V * (alpha-beta) * tol**(alpha-2.0_MK*beta-1.0_MK) * der_Mit_Lef
 !!$           ENDIF
 
-          ! equation (23)
+
            CALL mittag_leffler(Mit_Lef, x, alpha-beta, -beta, 5, 1000, 1.0E-9_MK, stat_info)
            IF (stat_info == -1) THEN
               GOTO 1000 !-- End of subroutine --
@@ -1000,9 +978,9 @@
            !    rheology of multiscale complex fluids
            !         by   Aditya Jaishankar and Gareth H. McKinley
            IF (Delta_t .NE. 0) THEN            
-              this%mem_function(I) = - G * Delta_t**(-beta-1.0_MK) * Mit_lef
+              this%mem_function(I) = G * Delta_t**(-beta-1.0_MK) * Mit_lef
            ELSE
-              this%mem_function(I) = - G * tol**(-beta-1.0_MK) * Mit_lef
+              this%mem_function(I) = G * tol**(-beta-1.0_MK) * Mit_lef
            ENDIF
 
 !!$           !**** Avoiding divergency ****

@@ -12,13 +12,23 @@
         ! Revisions   : V0.1 15.07.2009, original version.
         !
         !----------------------------------------------------
-        ! Author      : Xin Bian
-        ! Contact     : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
 
         !----------------------------------------------------
@@ -51,6 +61,12 @@
         this%read_conformation_file  = TRIM("mcf_restart_conformation.dat")
         this%read_conformation_unit  = 24
         this%read_conformation_fmt   =  TRIM("FORMATTED")
+
+        !****** Added by Adolfo for the fractional integral model *******
+        this%read_memory_file  = TRIM("mcf_restart_memory.dat")
+        this%read_memory_unit  = 25
+        this%read_memory_fmt   =  TRIM("FORMATTED")
+        !******************************************************************
         
         this%output_particles_relax_file  = TRIM("mcf_init_particles")
         this%output_particles_relax_unit  = 30
@@ -114,6 +130,12 @@
         this%restart_conformation_file  = TRIM("mcf_restart_conformation")
         this%restart_conformation_unit  = 93
         this%restart_conformation_fmt   =  TRIM("FORMATTED")
+
+        !************ Added by Adolfo for the integral fractional model ***********
+        this%restart_memory_file  = TRIM("mcf_restart_memory")
+        this%restart_memory_unit  = 94
+        this%restart_memory_fmt   =  TRIM("FORMATTED")        
+        !**************************************************************************
         
         this%restart_freq_step       = 100
         this%restart_freq_time       = 0.1_MK
@@ -128,6 +150,9 @@
         this%write_restart_physics      = .FALSE.
         this%write_restart_particles    = .FALSE.
         this%write_restart_conformation = .FALSE.
+        !******** Added by Adolfo for the fractional integral model *******
+        this%write_restart_memory = .FALSE.
+        !******************************************************************
 
         CALL tool_new(this%tool,stat_info_sub)
         
@@ -192,7 +217,13 @@
         this%read_conformation_file  = TRIM("mcf_restart_conformation.dat")
         this%read_conformation_unit  = 24
         this%read_conformation_fmt   =  TRIM("FORMATTED")
-        
+
+        !********* Added by Adolfo for the fractional integral model ******
+        this%read_memory_file  = TRIM("mcf_restart_memory.dat")
+        this%read_memory_unit  = 25
+        this%read_memory_fmt   =  TRIM("FORMATTED")
+        !******************************************************************
+
         this%output_particles_relax_file  = TRIM("mcf_init_particles")
         this%output_particles_relax_unit  = 30
         this%output_particles_relax_fmt   =  TRIM("FORMATTED")
@@ -253,7 +284,13 @@
         this%restart_conformation_file  = TRIM("mcf_restart_conformation")
         this%restart_conformation_unit  = 93
         this%restart_conformation_fmt   =  TRIM("FORMATTED")
-        
+
+        !************ Added by Adolfo for the integral fractional model ***********
+        this%restart_memory_file  = TRIM("mcf_restart_memory")
+        this%restart_memory_unit  = 94
+        this%restart_memory_fmt   =  TRIM("FORMATTED")        
+        !**************************************************************************
+
         this%restart_freq_step  = 100
         this%restart_freq_time  = 0.1_MK
         this%restart_freq_time_wall = 48.0_MK
@@ -297,6 +334,10 @@
         this%write_restart_physics      = .FALSE.
         this%write_restart_particles    = .FALSE.
         this%write_restart_conformation = .FALSE.
+        !******** Added by Adolfo for the fractional integral model *******
+        this%write_restart_memory = .FALSE.
+        !******************************************************************
+
         
         CALL tool_new(this%tool,stat_info_sub)
 
@@ -385,6 +426,15 @@
                    this%read_conformation_unit, stat_info_sub)
               CALL tool_print_msg(this%tool, "read_conformation_format", &
                    TRIM(this%read_conformation_fmt), stat_info_sub)
+
+              !******* Added by Adolfo for the fractional integral model *********
+              CALL tool_print_msg(this%tool, "read_memory_file", &
+                   TRIM(this%read_memory_file), stat_info_sub)
+              CALL tool_print_msg(this%tool, "read_memory_unit", &
+                   this%read_memory_unit, stat_info_sub)
+              CALL tool_print_msg(this%tool, "read_memory_format", &
+                   TRIM(this%read_memory_fmt), stat_info_sub)
+              !**************************************************
               
            END IF
            
@@ -565,6 +615,21 @@
                    this%restart_conformation_unit, stat_info_sub)
               CALL tool_print_msg(this%tool, "restart_conformation_format", &
                    TRIM(this%restart_conformation_fmt), stat_info_sub)
+
+              !***** Added by Adolfo for the fractional integral model ******
+              IF(LEN(TRIM(this%restart_memory_file)) > 0) THEN
+                 CALL tool_print_msg(this%tool, "restart_memory_file", &
+                      TRIM(this%restart_memory_file),&
+                      "****.dat", stat_info_sub)
+              ELSE
+                 CALL tool_print_msg(this%tool, "restart_memory_file", &
+                      "", stat_info_sub)
+              END IF
+              CALL tool_print_msg(this%tool, "restart_memory_unit", &
+                   this%restart_memory_unit, stat_info_sub)
+              CALL tool_print_msg(this%tool, "restart_memory_format", &
+                   TRIM(this%restart_memory_fmt), stat_info_sub)
+              !********************************************************
               
            END IF
                  

@@ -1,6 +1,31 @@
 !------------------------------------------------------------
 ! Program : Multiscale Complex Fluids simulation (MCF)
 !------------------------------------------------------------
+! Code for simulating fluids using the SPH integral viscoelastic method.
+! A fractional model for the constitutive equation has been implemented.
+! Reference:
+!  - Luca  Santelli, Adolfo  Vázquez-Quesada,  Marco Ellero.  Smoothed
+!     Particle  Hydrodynamics simulations  of  integral multi-mode  and
+!     fractional  viscoelastic models.  Journal of  Non-Newtonian Fluid
+!     Mechanics, 329, 105235. 2024.
+!
+! This code is  based on the original MCF code  developed by Xin Bian.
+! The  current version  has  been developed  in collaboration  between
+! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+!    BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
+! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+!    BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
+! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+!    at UNED, in Madrid, Spain.
+!
+! Developers:
+!     Xin Bian.
+!     Adolfo Vazquez-Quesada.
+!     Luca Santelli
+!
+! Contact: a.vazquez-quesada@fisfun.uned.es
+! 	   lsantelli@bcamath.org
+!          mellero@bcamath.org
 !
 !	 Purpose :
 !
@@ -43,30 +68,6 @@
 !                 
 !
 !
-!> \author	  M.Sc. Bian, Xin	 
-!  contact	  xin.bian@aer.mw.tum.de
-!> \version	  V0.4
-!> \date	  24.08.2010
-!
-!  Revision     : V0.4 24.08 2010, check the workflow.
-!
-!                 V0.3 04.12 2009, check the workflow.
-!           
-!                 V0.2 12.08 2009, check the workflow.
-!
-!                 V0.1 03.03.2009 original version.
-!
-!------------------------------------------------------------
-! Institute	:
-! Dr. Marco Ellero's Emmy Noether Group,
-! at Prof. Dr. Adams' Chair of Aerodynamics, 
-! Faculty of Mechanical Engineering,
-! Technische Universitaet Muenchen, Germany.
-!
-! Copyright must be authorized by Xin Bian and Marco Ellero.
-! Abuse or illegal redistribution without authorization will
-! be very disappointing to the author:<( and cause legal
-! matters.
 !------------------------------------------------------------
 
 
@@ -259,7 +260,7 @@
         ! the total number of processors granted and run 
         ! simutaneously. 
         !----------------------------------------------------
-        
+
         igroup        = 1
         ngroup        = 1
         
@@ -358,7 +359,7 @@
         !----------------------------------------------------
         
         !CALL io_new(mcf_io,stat_info_sub)
-        
+
         !----------------------------------------------------
         ! Non-default run: 
         !
@@ -391,7 +392,7 @@
         !----------------------------------------------------
         ! Check if control parameters given are resonable.
         !----------------------------------------------------
-        
+
         check_ctrl = &
              control_check_parameters(mcf_ctrl,stat_info_sub)
         
@@ -485,7 +486,7 @@
              control_get_integrate_type(mcf_ctrl,stat_info_sub)
         write_restart      = &
              control_get_write_restart(mcf_ctrl,stat_info_sub)
-        
+
         !----------------------------------------------------
         ! Set the debug flag for global Debug object.
         !
@@ -525,6 +526,7 @@
         !----------------------------------------------------
         
         CALL MPI_Barrier(comm,stat_info_sub)
+
 
 #endif           
         
@@ -572,7 +574,7 @@
         CALL kernel_new(mcf_kern,num_dim,kernel_type,&
              cut_off,stat_info_sub)
         h = kernel_get_h(mcf_kern,stat_info_sub)
-        
+
         !----------------------------------------------------
         ! Set smoothing length in physics object,
         ! since it will be used for calculating dt.
@@ -738,16 +740,19 @@
               !********** Added by Adolfo for the fractional model **********
               !** In case we want to restart from previous simulations, we will have to
               !   reprogram this **
-                 PRINT *, __FILE__, __LINE__, &
-                      "mcf.F90 file: restarting from previous simulations with &
-                      the fractional model only considers the positions of the particles. &
-                      If we want the history of the fluid to be preserved from previous &
-                      simulations, we should program it." 
+!!$                 PRINT *, __FILE__, __LINE__, &
+!!$                      "mcf.F90 file: restarting from previous simulations with &
+!!$                      the fractional model only considers the positions of the particles. &
+!!$                      If we want the history of the fluid to be preserved from previous &
+!!$                      simulations, we should program it." 
 !!$                 stat_info = -1
 !!$                 GOTO 9999
 
-                 CALL io_read_conformation(mcf_io,rank,&
+                 !***** Modified by Adolfo for the fractional integral model ********
+                 CALL io_read_memory(mcf_io,rank,&
                       mcf_particles,stat_info_sub)
+!!$                 CALL io_read_conformation(mcf_io,rank,&
+!!$                      mcf_particles,stat_info_sub)
                  
               END IF
               
@@ -840,7 +845,9 @@
                 l_map_x   = .TRUE., l_map_v = .TRUE., &
                 l_map_rho = .TRUE., l_map_m = .TRUE., &
                 l_map_id  = .TRUE.,  &
-                stat_info = stat_info_sub)
+                l_map_dx_prev = .TRUE., &
+                l_map_x_old   = .TRUE., &
+                stat_info     = stat_info_sub)
            !***************************************
 
            IF( stat_info_sub /=0 ) THEN

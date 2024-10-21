@@ -11,13 +11,23 @@
 ! Revisions   : V0.1 01.03.2009, original version.
 !
 !--------------------------------------------------
-! Author      : Xin Bian
-! Contact     : xin.bian@aer.mw.tum.de
-!
-! Dr. Marco Ellero's Emmy Noether Group,
-! Prof. Dr. N. Adams' Chair of Aerodynamics,
-! Faculty of Mechanical Engineering,
-! Technische Universitaet Muenchen, Germany.
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
+        !
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
 !-------------------------------------------------
 
       INTEGER FUNCTION colloid_get_num_dim(this, stat_info)
@@ -1165,7 +1175,7 @@
 	 !--- Modified by Adolfo ---
          ALLOCATE(d_vector(4,this%num_colloid))
 
-         WRITE(*,*) d_vector(:,1)
+!         WRITE(*,*) d_vector(:,1)
         
         d_vector(:,:) = this%acc_vector(:,1:this%num_colloid)
         

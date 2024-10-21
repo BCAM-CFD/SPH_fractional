@@ -40,13 +40,23 @@
         !               V0.1 30.07 2009, original version.
         !                 
         !----------------------------------------------------
-        ! Author      : Xin Bian
-        ! Contact     : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
         
         
@@ -132,10 +142,9 @@
         
         IF( .NOT. Newtonian ) THEN
 
+           !**** Added by Adolfo for the integral fractional model ****
            ALLOCATE(this%x_old(num_dim, num_part_real))
            this%x_old(1:num_dim,1:num_part_real) = this%x(1:num_dim,1:num_part_real)
-
-           !**** Added by Adolfo for the integral fractional model ****
            !--- x component is saved in the first Npoints_integration positions (1..Npoints_integration)
            !--- y component is saved from (Npoints_integration + 1 ..  2* Npoints_integration)
            !--- z component is saved from (2 * Npoints_integration + 1 ..  3* Npoints_integration)
@@ -289,4 +298,3 @@
 	RETURN
  
       END SUBROUTINE particles_init_partial_inter
-

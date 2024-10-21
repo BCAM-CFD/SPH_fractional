@@ -21,13 +21,23 @@
         !               V0.1 03.03.2009
         !
 	!----------------------------------------------------
-        ! Author       : Xin Bian
-        ! Contact      : xin.bian@aer.mw.tum.de
+        ! This code is  based on the original MCF code  developed by Xin Bian.
+        ! The  current version  has  been developed  in collaboration  between
+        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+        !   at UNED, in Madrid, Spain.
         !
-        ! Dr. Marco Ellero's Emmy Noether Group,
-        ! Prof. Dr. N. Adams' Chair of Aerodynamics,
-        ! Faculty of Mechanical Engineering,
-        ! Technische Universitaet Muenchen, Germany.
+        ! Developers:
+        !     Xin Bian.
+        !     Adolfo Vazquez-Quesada.
+        !     Luca Santelli.
+        !
+        ! Contact: a.vazquez-quesada@fisfun.uned.es
+        !          lsantelli@bcamath.org
+        !          mellero@bcamath.org
         !----------------------------------------------------
    
         USE mcf_header
@@ -155,6 +165,16 @@
            REAL(MK)                     :: restart_freq_time
            REAL(MK)                     :: restart_freq_time_wall
            INTEGER                      :: restart_freq_time_num
+
+           !****** Added by Adolfo for the fractional integral model *****
+           CHARACTER(LEN=MAX_CHAR)      :: restart_memory_file
+           CHARACTER(LEN=MAX_CHAR)      :: restart_memory_fmt
+           LOGICAL                      :: write_restart_memory
+           INTEGER                      :: restart_memory_unit
+           CHARACTER(LEN=MAX_CHAR)      :: read_memory_file
+           INTEGER                      :: read_memory_unit
+           CHARACTER(LEN=MAX_CHAR)      :: read_memory_fmt
+           !**************************************************************
            
            !-------------------------------------------------
            ! Flags indicating whether we should
