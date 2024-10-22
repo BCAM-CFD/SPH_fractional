@@ -25,7 +25,7 @@ date="_"+date.strftime('%y%m%d-%H%M%S')
 # date="_NEW"
 print("\n#########\nAbout to copy (if newer)\nfile with suffix "+date+"\n#########")
 bkp_file="./code_bkp/mcf"+date
-working_file="/scratch/lsantelli/mcf"+date
+working_file="/scratch/lsantelli/1apps/mcf"+date
 shutil.copy2("./src/mcf",bkp_file)
 
 processToCall= "rsync -azPS {} {}".format(bkp_file, working_file)

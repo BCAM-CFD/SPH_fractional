@@ -225,6 +225,9 @@
            INTEGER                             :: freq_integration
            INTEGER                             :: freq_steps_saved
            INTEGER                             :: steps_since_last_saved_pos
+           !**** Added by Luca for the integral fractional model ****
+           REAL(MK)                            :: a_damping
+           REAL(MK)                            :: b_damping
            !*************************************************************
            REAL(MK)                           :: kt_p
            LOGICAL                            :: eigen_dynamics

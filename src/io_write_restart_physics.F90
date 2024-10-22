@@ -592,13 +592,15 @@
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
 
-           alpha = physics_get_a_damping(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'a_damping = ', alpha
+
+          ! Added by Luca
+           a_damping = physics_get_a(d_physics,stat_info_sub) 
+           WRITE(cbuf, '(A,E16.8)') 'a_damping = ', a_damping
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
 
-           beta = physics_get_b_damping(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'b_damping = ', beta
+           b_damping = physics_get_b(d_physics,stat_info_sub) 
+           WRITE(cbuf, '(A,E16.8)') 'b_damping = ', b_damping
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
 
