@@ -1,0 +1,55 @@
+src/Class_IO.F90:           CHARACTER(LEN=MAX_CHAR)      :: restart_memory_file
+src/Class_IO.F90:           CHARACTER(LEN=MAX_CHAR)      :: restart_memory_fmt
+src/Class_IO.F90:           LOGICAL                      :: write_restart_memory
+src/Class_IO.F90:           INTEGER                      :: restart_memory_unit
+src/io_new.F90:        this%read_memory_file  = TRIM("mcf_restart_memory.dat")
+src/io_new.F90:        this%restart_memory_file  = TRIM("mcf_restart_memory")
+src/io_new.F90:        this%restart_memory_unit  = 94
+src/io_new.F90:        this%restart_memory_fmt   =  TRIM("FORMATTED")        
+src/io_new.F90:        this%write_restart_memory = .FALSE.
+src/io_new.F90:        this%read_memory_file  = TRIM("mcf_restart_memory.dat")
+src/io_new.F90:        this%restart_memory_file  = TRIM("mcf_restart_memory")
+src/io_new.F90:        this%restart_memory_unit  = 94
+src/io_new.F90:        this%restart_memory_fmt   =  TRIM("FORMATTED")        
+src/io_new.F90:        this%write_restart_memory = .FALSE.
+src/io_new.F90:              IF(LEN(TRIM(this%restart_memory_file)) > 0) THEN
+src/io_new.F90:                 CALL tool_print_msg(this%tool, "restart_memory_file", &
+src/io_new.F90:                      TRIM(this%restart_memory_file),&
+src/io_new.F90:                 CALL tool_print_msg(this%tool, "restart_memory_file", &
+src/io_new.F90:              CALL tool_print_msg(this%tool, "restart_memory_unit", &
+src/io_new.F90:                   this%restart_memory_unit, stat_info_sub)
+src/io_new.F90:              CALL tool_print_msg(this%tool, "restart_memory_format", &
+src/io_new.F90:                   TRIM(this%restart_memory_fmt), stat_info_sub)
+src/io_read_io.F90:              this%restart_memory_file = TRIM(ADJUSTL(cvalue))
+src/io_read_io.F90:              this%restart_memory_fmt = TRIM(ADJUSTL(cvalue))
+src/io_write_condition.F90:           write_restart_memory, stat_info)
+src/io_write_condition.F90:        LOGICAL, INTENT(OUT),OPTIONAL   :: write_restart_memory
+src/io_write_condition.F90:           this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .TRUE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:              this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .TRUE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:              this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .TRUE.
+src/io_write_condition.F90:                 this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:              this%write_restart_memory       = .FALSE.
+src/io_write_condition.F90:        IF (PRESENT(write_restart_memory) ) THEN
+src/io_write_condition.F90:           write_restart_memory = this%write_restart_memory
+src/io_write_condition.F90:           write_restart_memory, stat_info)
+src/io_write_condition.F90:        LOGICAL, INTENT(IN),OPTIONAL    :: write_restart_memory     
+src/io_write_condition.F90:             PRESENT(write_restart_memory) ) THEN
+src/io_write_condition.F90:           this%write_restart_memory = write_restart_memory
+src/io_write.F90:        IF ( this%write_restart_memory ) THEN
+src/io_write.F90:           CALL io_write_restart_memory(this,&
+src/io_write_restart_conformation.F90:      SUBROUTINE io_write_restart_memory(this,&
+src/io_write_restart_conformation.F90:             TRIM(this%restart_memory_file),step,'.dat'
+src/io_write_restart_conformation.F90:        IF (this%restart_memory_fmt(1:1) .EQ. 'f' .OR. &
+src/io_write_restart_conformation.F90:             this%restart_memory_fmt(1:1) .EQ. 'F') THEN
+src/io_write_restart_conformation.F90:        file_unit = this%restart_memory_unit
+src/io_write_restart_conformation.F90:                'io_write_restart_memory : ', &
+src/io_write_restart_conformation.F90:                'io_write_restart_memory : ',&
+src/io_write_restart_conformation.F90:      END SUBROUTINE io_write_restart_memory
+src/marching_marching.F90:        LOGICAL                         :: l_write_restart_memory
+src/marching_marching.F90:             l_write_restart_memory, &
+src/marching_marching.F90:             .NOT. l_write_restart_memory,&
