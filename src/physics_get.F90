@@ -14,21 +14,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-!--------------------------------------------------
+ !--------------------------------------------------
 
       INTEGER FUNCTION physics_get_num_species(this,stat_info)
        
@@ -638,8 +638,7 @@
       END FUNCTION physics_get_beta
       !******************************************************************
 
-
-      !*********** Added by Luca for the fractional model. Does not work *************
+      !*********** Added by Adolfo for the fractional model *************
       REAL(MK) FUNCTION physics_get_a_damping(this,stat_info)
         
         TYPE(Physics), INTENT(IN)       :: this
@@ -654,8 +653,7 @@
       END FUNCTION physics_get_a_damping
       !******************************************************************
 
-
-      !*********** Added by Luca for the fractional model *************
+      !*********** Added by Adolfo for the fractional model *************
       REAL(MK) FUNCTION physics_get_b_damping(this,stat_info)
         
         TYPE(Physics), INTENT(IN)       :: this
@@ -668,7 +666,7 @@
         RETURN
         
       END FUNCTION physics_get_b_damping
-      !******************************************************************
+      !******************************************************************            
 
 !************** Added by Adolfo **********
       REAL(MK) FUNCTION physics_get_a(this,stat_info)
@@ -696,6 +694,8 @@
         RETURN
         
       END FUNCTION physics_get_b
+
+      
 !*************** END OF ADDED BY ADOLFO ******************
       
 

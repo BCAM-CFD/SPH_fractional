@@ -11,27 +11,27 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !----------------------------------------------------
+         !----------------------------------------------------
         
         !----------------------------------------------------
         ! Argument
         !----------------------------------------------------
         
-        TYPE(IO), INTENT(INOUT)         :: this
+        TYPE(IO), INTENT(INOUT)            :: this
         INTEGER, INTENT(OUT)            :: stat_info
         
         !----------------------------------------------------
@@ -224,16 +224,6 @@
            ELSE IF (carg == 'READ_CONFORMATION_FMT') THEN
 	      
               this%read_conformation_fmt = TRIM(ADJUSTL(cvalue))
-
-              !******** Added by Adolfo for the fractional integral model **********
-           ELSE IF (carg == 'READ_MEMORY_FILE') THEN
-              
-              this%read_memory_file = TRIM(ADJUSTL(cvalue))
-             
-           ELSE IF (carg == 'READ_MEMORY_FMT') THEN
-	      
-              this%read_memory_fmt = TRIM(ADJUSTL(cvalue))
-              !*****************************************
               
            ELSE  IF (carg == 'OUTPUT_PARTICLES_RELAX_FILE') THEN
               
@@ -376,17 +366,7 @@
            ELSE IF (carg == 'RESTART_CONFORMATION_FMT') THEN
               
               this%restart_conformation_fmt = TRIM(ADJUSTL(cvalue))
-
-           !***** Added by Adolfo for the fractional integral model ********
-           ELSE IF (carg == 'RESTART_MEMORY_FILE') THEN
               
-              this%restart_memory_file = TRIM(ADJUSTL(cvalue))
-
-           ELSE IF (carg == 'RESTART_MEMORY_FMT') THEN
-              
-              this%restart_memory_fmt = TRIM(ADJUSTL(cvalue))
-           !**************************************************************
-
            ELSE IF (carg == 'RESTART_FREQ_STEP') THEN
               
               READ(cvalue,*,IOSTAT=ios, ERR=200)  this%restart_freq_step

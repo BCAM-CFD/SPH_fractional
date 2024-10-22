@@ -25,21 +25,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !----------------------------------------------------
+         !----------------------------------------------------
         
         !----------------------------------------------------
 	! Arguments.
@@ -105,13 +105,6 @@
         !*** For the fractional model, a lot of variables are missing here ****
         INTEGER :: Nmodes
         CHARACTER(len=2*MAX_CHAR)	:: mode
-        REAL(MK)                        :: E
-        REAL(MK)                        :: alpha
-        REAL(MK)                        :: beta
-        REAL(MK)                        :: a_damping
-        REAL(MK)                        :: b_damping
-        REAL(MK)                        :: time_saved
-        INTEGER                         :: Npoints_integration
         !**************************************************************
         REAL(MK)                        :: kt_p
         LOGICAL                         :: eigen_dynamics
@@ -575,47 +568,6 @@
            WRITE(cbuf, '(A,E16.8)') 'kt_p = ', kt_p
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           !********** Added by Adolfo for the integral fractional model *********
-           E = physics_get_E(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'E = ', E
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           alpha = physics_get_alpha(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'alpha = ', alpha
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           beta = physics_get_beta(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'beta = ', beta
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-
-          ! Added by Luca
-           a_damping = physics_get_a(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'a_damping = ', a_damping
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           b_damping = physics_get_b(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'b_damping = ', b_damping
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           time_saved = physics_get_time_saved(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,E16.8)') 'time_saved = ', time_saved
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-
-           Npoints_integration = physics_get_Npoints_integration(d_physics,stat_info_sub) 
-           WRITE(cbuf, '(A,I10)') 'Npoints_integration = ', Npoints_integration
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
-           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
-           !*********************************************************************
-
-
            
            eigen_dynamics = physics_get_eigen_dynamics(d_physics,stat_info_sub)
            WRITE(cbuf, '(A,L)') 'eigen_dynamics = ', eigen_dynamics

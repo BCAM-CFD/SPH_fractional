@@ -16,21 +16,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !----------------------------------------------------
+         !----------------------------------------------------
         
         !----------------------------------------------------
         ! Arguments
@@ -243,6 +243,7 @@
         evec(:,:)       = 0.0_MK
         evec_normalize  = .FALSE.
         evec_tolerance  = mcf_machine_zero
+
 
         ! ********* Added by Luca for the integral fractional model ****
         ! THey default to "damping off"
@@ -805,8 +806,6 @@
              !-----------------------------------------------
              ! number of molecules dumbbells.
              !-----------------------------------------------
-
-             READ(cvalue,*,IOSTAT=ios, ERR=200) n_p
              
              CALL physics_set_n_p(phys, n_p,stat_info_sub)
              
@@ -912,6 +911,27 @@
              steps_since_last_saved_pos = 0
              CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub) 
              !************************************************************
+
+           !**** Added by Adolfo for the integral fractional model ****
+           ELSE IF (carg == 'A_DAMPING') THEN
+             
+             !-----------------------------------------------
+             ! a fit parameter from McKinley model 2014
+             !-----------------------------------------------
+             
+             READ(cvalue,*,IOSTAT=ios,ERR=200) a_damping
+             CALL physics_set_a_damping(phys,a_damping,stat_info_sub)
+
+           !**** Added by Adolfo for the integral fractional model ****
+           ELSE IF (carg == 'B_DAMPING') THEN
+             
+             !-----------------------------------------------
+             ! b fit parameter from McKinley model 2014
+             !-----------------------------------------------
+             
+             READ(cvalue,*,IOSTAT=ios,ERR=200) b_damping
+             CALL physics_set_b_damping(phys,b_damping,stat_info_sub)             
+             
 
           ELSE IF (carg == 'EIGEN_DYNAMICS') THEN
              

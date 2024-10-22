@@ -1,4 +1,3 @@
-!****** Modified by Adolfo for the fractional integral model ********
       SUBROUTINE io_write_condition_check(this,&
            step_current,time_current,&
            write_particles, write_conformation,&
@@ -6,17 +5,7 @@
            write_statistic, write_boundary,&
            write_restart_physics,&
            write_restart_particles,&
-           write_restart_conformation, &
-           write_restart_memory, stat_info)
-!!$      SUBROUTINE io_write_condition_check(this,&
-!!$           step_current,time_current,&
-!!$           write_particles, write_conformation,&
-!!$           write_colloid, &
-!!$           write_statistic, write_boundary,&
-!!$           write_restart_physics,&
-!!$           write_restart_particles,&
-!!$           write_restart_conformation, stat_info)
-!******************************************************
+           write_restart_conformation, stat_info)
         
         !----------------------------------------------------
         !  Subroutine   :  io_write_condition_check
@@ -36,19 +25,19 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
         !----------------------------------------------------
         
@@ -67,9 +56,6 @@
         LOGICAL, INTENT(OUT),OPTIONAL   :: write_restart_physics
         LOGICAL, INTENT(OUT),OPTIONAL   :: write_restart_particles
         LOGICAL, INTENT(OUT),OPTIONAL   :: write_restart_conformation        
-        !***** Added by Adolfo for the fractional integral model ********
-        LOGICAL, INTENT(OUT),OPTIONAL   :: write_restart_memory
-        !****************************************************************
         INTEGER, INTENT(OUT)            :: stat_info
         
         !----------------------------------------------------
@@ -267,9 +253,6 @@
            this%write_restart_physics      = .FALSE.
            this%write_restart_particles    = .FALSE.
            this%write_restart_conformation = .FALSE.
-           !****** Added by Adolfo for the fractional integral model ********
-           this%write_restart_memory       = .FALSE.
-           !*****************************************************************
                  
         CASE (1)
            
@@ -281,15 +264,8 @@
               
               IF ( .NOT. Newtonian ) THEN
                  this%write_restart_conformation = .TRUE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .TRUE.
-                 !*****************************************************************
-
               ELSE
                  this%write_restart_conformation = .FALSE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .FALSE.
-                 !*****************************************************************
               END IF
               
            ELSE
@@ -297,9 +273,6 @@
               this%write_restart_physics      = .FALSE. 
               this%write_restart_particles    = .FALSE.
               this%write_restart_conformation = .FALSE.
-              !****** Added by Adolfo for the fractional integral model ********
-              this%write_restart_memory       = .FALSE.
-              !*****************************************************************
               
            END IF
            
@@ -316,14 +289,8 @@
               
               IF ( .NOT. Newtonian ) THEN
                  this%write_restart_conformation = .TRUE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .TRUE.
-                 !*****************************************************************
               ELSE
                  this%write_restart_conformation = .FALSE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .FALSE.
-                 !*****************************************************************
               END IF
               
            ELSE
@@ -331,9 +298,6 @@
               this%write_restart_physics      = .FALSE.
               this%write_restart_particles    = .FALSE.
               this%write_restart_conformation = .FALSE.
-              !****** Added by Adolfo for the fractional integral model *****
-              this%write_restart_memory       = .FALSE.
-              !*****************************************************************
               
            END IF
            
@@ -353,14 +317,8 @@
               
               IF ( .NOT. Newtonian ) THEN
                  this%write_restart_conformation = .TRUE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .TRUE.
-                 !*****************************************************************
               ELSE
                  this%write_restart_conformation = .FALSE.
-                 !****** Added by Adolfo for the fractional integral model *****
-                 this%write_restart_memory       = .FALSE.
-                 !*****************************************************************
               END IF
               
            ELSE
@@ -368,9 +326,6 @@
               this%write_restart_physics      = .FALSE.
               this%write_restart_particles    = .FALSE.
               this%write_restart_conformation = .FALSE.
-              !****** Added by Adolfo for the fractional integral model *****
-              this%write_restart_memory       = .FALSE.
-              !*****************************************************************
               
            END IF
            
@@ -417,10 +372,6 @@
         IF (PRESENT(write_restart_conformation) ) THEN
            write_restart_conformation = this%write_restart_conformation
         END IF
-
-        IF (PRESENT(write_restart_memory) ) THEN
-           write_restart_memory = this%write_restart_memory
-        END IF
         
 9999    CONTINUE
         
@@ -428,23 +379,14 @@
         
       END SUBROUTINE io_write_condition_check
       
-      !********** Modified by Adolfo for the integral fractional model ***********
+      
       SUBROUTINE io_write_condition_set(this,&
            write_particles, write_conformation,&
            write_colloid, &
            write_statistic, write_boundary,&          
            write_restart_physics,&
            write_restart_particles,&
-           write_restart_conformation, &
-           write_restart_memory, stat_info)
-!!$      SUBROUTINE io_write_condition_set(this,&
-!!$           write_particles, write_conformation,&
-!!$           write_colloid, &
-!!$           write_statistic, write_boundary,&          
-!!$           write_restart_physics,&
-!!$           write_restart_particles,&
-!!$           write_restart_conformation, stat_info)
-!****************************************************************
+           write_restart_conformation, stat_info)
         
         !----------------------------------------------------
         !  Subroutine   :  io_write_condition_set
@@ -463,19 +405,19 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
         !----------------------------------------------------
         
@@ -492,9 +434,6 @@
         LOGICAL, INTENT(IN),OPTIONAL    :: write_restart_physics
         LOGICAL, INTENT(IN),OPTIONAL    :: write_restart_particles
         LOGICAL, INTENT(IN),OPTIONAL    :: write_restart_conformation        
-        !***** Added by Adolfo for the integral fractional model *******
-        LOGICAL, INTENT(IN),OPTIONAL    :: write_restart_memory     
-        !***************************************************************
         INTEGER, INTENT(INOUT)          :: stat_info
         
         !----------------------------------------------------
@@ -558,14 +497,6 @@
              PRESENT(write_restart_conformation) ) THEN
            this%write_restart_conformation = write_restart_conformation
         END IF
-
-        !********** Added by Adolfo for the integral fractional model ********
-        IF ( write_restart > 0.AND. &
-             (.NOT. Newtonian ) .AND. &
-             PRESENT(write_restart_memory) ) THEN
-           this%write_restart_memory = write_restart_memory
-        END IF
-        !**********************************************************************
         
         RETURN
         

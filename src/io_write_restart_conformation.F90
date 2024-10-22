@@ -19,21 +19,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !-------------------------------------------------------------
+         !-------------------------------------------------------------
         
         !----------------------------------------------------
         !  Arguments
@@ -247,195 +247,5 @@
         RETURN	
         
       END SUBROUTINE io_write_restart_conformation
-
-      !******** Added by Adolfo for the integral fractional model ***********
-      SUBROUTINE io_write_restart_memory(this,&
-           rank,step,d_particles,num_part,stat_info)
-        !---------------------------------
-        ! Subroutine to write a restart file for the past positions of the particles
-        !---------------------------------
-
-        USE ppm_module_user_io
-                
-      	!--------------------------------
-      	!  Arguments     
-      	!--------------------------------       
-        
-        TYPE(IO),INTENT(IN)                     :: this
-        INTEGER, INTENT(IN)                     :: rank
-        INTEGER, INTENT(IN)                     :: step
-        INTEGER, INTENT(IN)                     :: num_part
-        TYPE(Particles), INTENT(IN)             :: d_particles
-        INTEGER,INTENT(OUT)                     :: stat_info
-        
-      	!--------------------------------
-      	!  Local variables 
-      	!--------------------------------
-        
-        INTEGER                                 :: stat_info_sub
-        
-        TYPE(Physics), POINTER                  :: phys
-        REAL(MK), DIMENSION(:,:)  , POINTER     :: output
-         
-        CHARACTER(LEN=MAX_CHAR)                 :: file_name
-        INTEGER                                 :: file_fmt
-        INTEGER                                 :: file_unit
-        
-        INTEGER                                 :: dim
-        INTEGER                                 :: I
-        INTEGER                                 :: data_dim
-        INTEGER                                 :: steps_since_last_saved_pos
-        INTEGER                                 :: Npoints_integration
-        !---- x_old is the last stored position (same size as x) ----
-        !---- dx_prev is the dx stored from previous positions ----
-        !-- Note about dx_prev
-        !--- x component is saved in the first Npoints_integration positions (1..Npoints_integration)
-        !--- y component is saved from (Npoints_integration + 1 ..  2* Npoints_integration)
-        !--- z component is saved from (2 * Npoints_integration + 1 ..  3* Npoints_integration)
-        !--- In general, k component is saved from ((k-1)*Npoints_integration + 1 to k*Npoints_integration)
-        REAL(MK), DIMENSION(:,:), POINTER       :: x_old
-        REAL(MK), DIMENSION(:,:), POINTER       :: dx_prev
-        
-        INTEGER                                 :: num_part_ppm
-        INTEGER                                 :: current_dim
-
-        CHARACTER(LEN=MAX_CHAR)                 :: cbuf
-        INTEGER					:: clen
-
-
-	!--------------------------------
-      	!  Initialization of variables.
-      	!--------------------------------
-        
-	stat_info     = 0
-        stat_info_sub = 0
-
-        NULLIFY(phys)
-        NULLIFY(x_old)
-        NULLIFY(dx_prev)
-        NULLIFY(output)
-
-        CALL particles_get_phys(d_particles,phys,stat_info_sub)
-        dim                        = physics_get_num_dim(phys,stat_info_sub)
-        Npoints_integration        = physics_get_Npoints_integration(phys, stat_info_sub)
-        steps_since_last_saved_pos = physics_get_steps_since_last_saved_pos(phys,stat_info_sub)
-
-        CALL particles_get_x_old(d_particles,x_old,num_part,stat_info_sub)
-        CALL particles_get_dx_prev(d_particles,dx_prev,num_part,stat_info_sub)
-
-        data_dim = dim + dim * Npoints_integration
-
-        ALLOCATE(output(data_dim,num_part))
-
-        DO I = 1, num_part
-           output(1:dim, I) = x_old(1:dim, I)
-        ENDDO
-        current_dim = dim + 1
-        DO I = 1, num_part
-           output(current_dim:data_dim, I) = dx_prev(1:data_dim - dim, I)
-        ENDDO 
-        !----------------------------------------------------
-      	! Define the output file name for this time step.
-        !----------------------------------------------------
-        
-        WRITE(file_name,'(A,I8.8,A)') &
-             TRIM(this%restart_memory_file),step,'.dat'
-        
-      	!--------------------------------
-      	! Define format of output file.
-      	!--------------------------------
-        
-        IF (this%restart_memory_fmt(1:1) .EQ. 'f' .OR. &
-             this%restart_memory_fmt(1:1) .EQ. 'F') THEN
-           file_fmt = ppm_param_io_ascii
-        ELSE
-           file_fmt = ppm_param_io_binary
-        END IF
-        
-        file_unit = this%restart_memory_unit
-
-        !-------------------------------------------
-        !  Open ppm I/O unit for centralized I/O.
-        !-------------------------------------------
-        
-        CALL ppm_io_open(file_unit,file_name,&
-             ppm_param_io_write, ppm_param_io_replace, &
-             file_fmt,ppm_param_io_centralized,stat_info_sub)
-
-        IF (stat_info_sub /= 0) THEN          
-           PRINT *, &
-                'io_write_restart_memory : ', &
-                'Failed to open unit !'
-           stat_info = -1
-           GOTO 9999
-        END IF
-        
-        num_part_ppm = num_part
-        CALL ppm_io(file_unit,num_part_ppm,&
-             ppm_param_io_write,ppm_param_io_sum,STAT=stat_info_sub)
-
-        !******** Changed by Adolfo *********
-        WRITE(cbuf,'(A1,I3,A6)') '(', data_dim ,'E16.8)'
-!        WRITE(cbuf,'(A1,I2,A6)') '(', dim**2 ,'E16.8)'
-        !************************************
-        clen = LEN_TRIM(cbuf)
-
-        !******* Changed by Adolfo ************
-        CALL ppm_io(file_unit,output,&
-             ppm_param_io_write,ppm_param_io_concat,&
-             IOFMT=cbuf(1:clen), STAT=stat_info_sub)
-!!$        CALL ppm_io(file_unit,ct,&
-!!$             ppm_param_io_write,ppm_param_io_concat,&
-!!$             IOFMT=cbuf(1:clen), STAT=stat_info_sub)
-        !***************************************
-        
-        IF (stat_info_sub /= 0) THEN          
-           PRINT *,&
-                'io_write_restart_memory : ',&
-                "Writing memory failed !"
-           stat_info = -1
-           GOTO 9999
-        END IF
-        
-        
-        !-----------------------
-        ! Close file.
-        !-----------------------
-        
-        CALL ppm_io_close(file_unit,stat_info_sub)
-        
-        !-----------------------
-        !  Print out confirm.
-        !-----------------------       
-        
-        IF (rank == 0) THEN          
-           WRITE(cbuf,'(2A)') &
-                'Restart memory written to ',&
-                TRIM(file_name)          
-           PRINT *, "***", TRIM(cbuf)
-        END IF
-        
-        !-----------------------
-        ! Return.
-        !-----------------------
-        
-9999    CONTINUE
-        
-        IF (ASSOCIATED(x_old)) THEN
-           DEALLOCATE(x_old)
-        END IF
-
-        IF (ASSOCIATED(dx_prev)) THEN
-           DEALLOCATE(dx_prev)
-        END IF
-
-        IF (ASSOCIATED(output)) THEN
-           DEALLOCATE(output)
-        END IF
-        
-        
-        RETURN	
-        
-      END SUBROUTINE io_write_restart_memory
-!***************************************************************      
+      
      

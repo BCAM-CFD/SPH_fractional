@@ -23,21 +23,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !----------------------------------------------------
+         !----------------------------------------------------
         
         !----------------------------------------------------
         ! Arguments
@@ -353,7 +353,7 @@
            output(current_dim+1:current_dim+num_id,I) = id(1:num_id,I)
         ENDDO
         !*********************************************
-
+        
         current_dim = current_dim + num_id
         
 #ifdef __IO_PARTICLES_FORCE_TOTAL
@@ -430,9 +430,13 @@
         
         
         !************** Changed by Adolfo ******************
-        WRITE(cbuf,'(A1,I2,A6)') '(', data_dim ,'E16.8)'
+!        WRITE(cbuf,'(A1,I2,A6)') '(', data_dim ,'E16.8)'
 !        WRITE(cbuf,'(A1,I2,A6)') '(', data_dim ,'E12.4)'
-!        cbuf = '(8E12.4, E16.8, E12.4)'
+        IF (num_x == 2) THEN !-- DIM = 2 --
+           cbuf = '(6E12.4, E16.8, E12.4)'
+        ELSE
+           cbuf = '(8E12.4, E16.8, E12.4)'
+        ENDIF
         !***************************************************
         clen = LEN_TRIM(cbuf)         
         
@@ -492,7 +496,7 @@
         IF (ASSOCIATED(id)) THEN
            DEALLOCATE(id)
         END IF
-
+        
 #ifdef __IO_PARTICLES_FORCE_TOTAL
         IF (ASSOCIATED(f)) THEN
            DEALLOCATE(f)

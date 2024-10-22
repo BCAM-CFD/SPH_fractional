@@ -16,21 +16,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-!------------------------------------------------------------
+ !------------------------------------------------------------
 
       SUBROUTINE particles_get_ctrl(this,d_ctrl,stat_info)
 
@@ -1521,97 +1521,3 @@
       END SUBROUTINE  particles_get_part_colloid_list
       
       
-      !************ Added by Adolfo for the integral fractional model *********
-      SUBROUTINE particles_get_x_old(this,x_old,num,stat_info)
-
-        TYPE(Particles),INTENT(IN)              :: this
-        REAL(MK),DIMENSION(:,:), POINTER        :: x_old
-        INTEGER, INTENT(IN)                     :: num
-        INTEGER,INTENT(OUT)                     :: stat_info
-        
-        !----------------------
-        ! Local variables
-        !----------------------
-        
-        INTEGER                         :: dim
-        INTEGER :: I
-        
-        stat_info = 0
-        
-        IF ( num > this%num_part_all ) THEN
-           PRINT *, "particles_get_x_old : ", &
-                "Required particles is more than existed !"
-           stat_info  = -1
-           GOTO 9999
-        END IF
-
-        IF(ASSOCIATED(x_old)) THEN 
-           DEALLOCATE(x_old)
-        END IF
-        
-        IF ( num > 0 ) THEN
-           
-           dim = SIZE(this%x_old,1)
-
-           ALLOCATE(x_old(dim,num))
-           
-           DO I = 1, dim
-              x_old(I,1:num) = this%x_old(I,1:num)
-           ENDDO
-           
-        END IF
-        
-9999    CONTINUE
-        
-        RETURN          
-        
-      END SUBROUTINE particles_get_x_old
-      !************************************************
-
-      !************ Added by Adolfo for the integral fractional model *********
-      SUBROUTINE particles_get_dx_prev(this,dx_prev,num,stat_info)
-
-        TYPE(Particles),INTENT(IN)              :: this
-        REAL(MK),DIMENSION(:,:), POINTER        :: dx_prev
-        INTEGER, INTENT(IN)                     :: num
-        INTEGER,INTENT(OUT)                     :: stat_info
-        
-        !----------------------
-        ! Local variables
-        !----------------------
-        
-        INTEGER                         :: dim
-        INTEGER :: I
-        
-        stat_info = 0
-        
-        IF ( num > this%num_part_all ) THEN
-           PRINT *, "particles_get_dx_prev : ", &
-                "Required particles is more than existed !"
-           stat_info  = -1
-           GOTO 9999
-        END IF
-
-        IF(ASSOCIATED(dx_prev)) THEN 
-           DEALLOCATE(dx_prev)
-        END IF
-        
-        IF ( num > 0 ) THEN
-           
-           !--- dim = dimension * Npoints_integration ---
-           dim = SIZE(this%dx_prev,1)
-
-           ALLOCATE(dx_prev(dim,num))
-           
-           DO I = 1, dim
-              dx_prev(I,1:num) = this%dx_prev(I,1:num)
-           ENDDO
-           
-        END IF
-        
-9999    CONTINUE
-        
-        RETURN          
-        
-      END SUBROUTINE particles_get_dx_prev
-      !************************************************

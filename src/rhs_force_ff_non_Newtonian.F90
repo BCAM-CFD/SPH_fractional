@@ -31,21 +31,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-        !----------------------------------------------------
+         !----------------------------------------------------
         
         !----------------------------------------------------
         !  Arguments
@@ -105,7 +105,7 @@
         SELECT CASE (this%rhs_force_type)
            
         CASE (2)
-           
+           !This is for the Espanol equal to Hu Adams
            CALL  rhs_force_ff_non_Newtonian_Espanol(this,&
                 xi,xj,dij,vi,vj,rhoi,rhoj,pi,pj,&
                 mi,mj,w,gradw,fi,fj,stat_info_sub)
@@ -121,6 +121,15 @@
            CALL  rhs_force_ff_non_Newtonian_HuAdams_angular(this,&
                 xi,xj,dij,vi,vj,rhoi,rhoj,pi,pj,&
                 mi,mj,w,gradw,fi,fj,stat_info_sub)
+
+
+        CASE (5) 
+           !Check if CTRL_MCF can have 5 as input. Check for rhs_force_type in all the files to verify
+         ! This is for the FULL Espanol that conserves momentum
+           CALL  rhs_force_ff_non_Newtonian_Espanol_original(this,&
+                       xi,xj,dij,vi,vj,rhoi,rhoj,pi,pj,&
+                       mi,mj,w,gradw,fi,fj,stat_info_sub)
+       
            
         CASE DEFAULT
            

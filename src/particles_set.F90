@@ -12,21 +12,21 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
         !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
         !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
+        !     Luca Santelli
         !
         ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
+        ! 	   lsantelli@bcamath.org
         !          mellero@bcamath.org
-!------------------------------------------------------------
+ !------------------------------------------------------------
 
       SUBROUTINE particles_set_x(this,d_x,num,stat_info)
 
@@ -414,82 +414,3 @@
         RETURN          
         
       END SUBROUTINE particles_set_evec
-
-!************ Subroutine added by Adolfo for the fractional integral model ********
-      SUBROUTINE particles_set_x_old(this,d_x_old,num,stat_info)
-
-        TYPE(Particles),INTENT(INOUT)   :: this
-        REAL(MK),DIMENSION(:,:),POINTER :: d_x_old
-        INTEGER, INTENT(IN)             :: num
-        INTEGER,INTENT(OUT)             :: stat_info
-        
-        INTEGER, DIMENSION(2)           :: dim_x_old
-        
-         
-        stat_info = 0
-        
-        dim_x_old(1) = SIZE(d_x_old,1)
-        dim_x_old(2) = SIZE(d_x_old,2)
-        
-        IF ( dim_x_old(1) /= this%num_dim.OR. &
-             dim_x_old(2) /= num ) THEN
-           PRINT *, "particles_set_x_old : ", &
-                "dimensions don't match !"
-           stat_info = -1
-           GOTO 9999
-        END IF
-        
-        
-        IF(ASSOCIATED(this%x_old)) THEN 
-           DEALLOCATE(this%x_old)
-        END IF
-        
-        ALLOCATE(this%x_old(dim_x_old(1),dim_x_old(2)))
-        
-        this%x_old(:,:) = d_x_old(:,:)
-        
-9999    CONTINUE
-        
-        RETURN          
-        
-      END SUBROUTINE particles_set_x_old
-
-!************ Subroutine added by Adolfo for the fractional integral model ********
-      SUBROUTINE particles_set_dx_prev(this,dx_prev,num, Npoints_integration, stat_info)
-
-        TYPE(Particles),INTENT(INOUT)   :: this
-        REAL(MK),DIMENSION(:,:),POINTER :: dx_prev
-        INTEGER, INTENT(IN)             :: num
-        INTEGER, INTENT(IN)             :: Npoints_integration
-        INTEGER,INTENT(OUT)             :: stat_info
-        
-        INTEGER, DIMENSION(2)           :: dim_dx_prev
-        
-         
-        stat_info = 0
-        
-        dim_dx_prev(1) = SIZE(dx_prev,1)
-        dim_dx_prev(2) = SIZE(dx_prev,2)
-        
-        IF ( dim_dx_prev(1) /= this%num_dim * Npoints_integration .OR. &
-             dim_dx_prev(2) /= num ) THEN
-           PRINT *, "particles_set_dx_prev : ", &
-                "dimensions don't match !"
-           stat_info = -1
-           GOTO 9999
-        END IF
-        
-        IF(ASSOCIATED(this%dx_prev)) THEN 
-           DEALLOCATE(this%dx_prev)
-        END IF
-        
-        ALLOCATE(this%dx_prev(dim_dx_prev(1),dim_dx_prev(2)))
-        
-        this%dx_prev(:,:) = dx_prev(:,:)
-        
-9999    CONTINUE
-        
-        RETURN          
-        
-      END SUBROUTINE particles_set_dx_prev
-
