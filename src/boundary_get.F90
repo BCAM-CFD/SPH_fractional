@@ -128,6 +128,29 @@
         
       END SUBROUTINE  boundary_get_shear_v
 
+      !****************** Added by Adolfo for the integral fractional model ******************
+      SUBROUTINE boundary_get_oscil_v(this,d_oscil_v,stat_info)
+        
+        TYPE(Boundary), INTENT(IN)              :: this
+        REAL(MK), DIMENSION(:,:), POINTER       :: d_oscil_v
+        INTEGER, INTENT(OUT)                    :: stat_info
+        
+        stat_info = 0
+        
+        IF(ASSOCIATED(d_oscil_v)) THEN
+           DEALLOCATE(d_oscil_v)
+        END IF
+        
+        ALLOCATE(d_oscil_v(this%num_dim,2*this%num_dim))
+        
+        d_oscil_v(1:this%num_dim,1:2*this%num_dim) = &
+             this%oscil_v(1:this%num_dim,1:2*this%num_dim)
+        
+        RETURN
+        
+      END SUBROUTINE  boundary_get_oscil_v
+      !**********************************************
+
 
       SUBROUTINE boundary_get_shear_type(this,d_shear_type,stat_info)
       

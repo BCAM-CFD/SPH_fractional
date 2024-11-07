@@ -90,6 +90,9 @@
            INTEGER                              :: num_dim           
            INTEGER, DIMENSION(:), POINTER       :: bcdef
            REAL(MK), DIMENSION(:,:), POINTER    :: shear_v0
+           !*********** Added by Adolfo for the integral fractional model *************
+           REAL(MK), DIMENSION(:,:), POINTER    :: oscil_v
+           !*************************************************************************
            REAL(MK), DIMENSION(:,:), POINTER    :: shear_v
            REAL(MK), DIMENSION(:,:), POINTER    :: shear_rate
            REAL(MK), DIMENSION(:,:), POINTER    :: shear_length
@@ -115,6 +118,9 @@
            INTEGER                              :: num_wall_sym
            INTEGER                              :: num_wall_solid
            INTEGER                              :: num_osci
+           !******** Added by Adolfo for the integral fractional model **********
+           INTEGER                              :: num_osci_trans
+           !**********************************************************************
            INTEGER                              :: num_le
            INTEGER                              :: num_shear
            

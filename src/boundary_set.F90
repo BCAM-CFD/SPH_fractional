@@ -68,6 +68,14 @@
            END IF
            ALLOCATE(this%shear_v(d_num_dim,2*d_num_dim))
            this%shear_v(:,:) = 0.0_MK
+
+           !******************* Added by Adolfo for the integral fractional model **********
+           IF (ASSOCIATED(this%oscil_v)) THEN
+              DEALLOCATE(this%oscil_v)
+           END IF
+           ALLOCATE(this%oscil_v(d_num_dim,2*d_num_dim))
+           this%oscil_v(:,:) = 0.0_MK
+           !********************************
            
            IF (ASSOCIATED(this%shear_freq)) THEN
               DEALLOCATE(this%shear_freq)
@@ -191,6 +199,15 @@
               this%num_osci = this%num_osci + 1
            END IF
         END DO
+
+        !*** Added by Adolfo for the fractional integral model ****
+        DO i =1, dim
+           IF ( d_shear_type(i) == 3 ) THEN
+              this%num_osci_trans = this%num_osci_trans + 1
+           END IF
+        END DO        
+        !***************** End ******************
+        
         
 9999    CONTINUE
         
@@ -327,6 +344,39 @@
         RETURN
         
       END SUBROUTINE  boundary_set_shear_v
+
+      !**************** Added by Adolfo for the integral fractional model **************
+      SUBROUTINE boundary_set_oscil_v(this,d_oscil_v,stat_info)
+        
+        TYPE(Boundary), INTENT(INOUT)   :: this
+        REAL(MK), DIMENSION(:,:)        :: d_oscil_v
+        INTEGER, INTENT(OUT)            :: stat_info
+        
+        INTEGER                         :: dim1
+        INTEGER                         :: dim2
+
+        stat_info = 0
+        
+        dim1 = SIZE(d_oscil_v,1)
+        dim2 = SIZE(d_oscil_v,2)
+        
+        IF( dim1 /= this%num_dim .OR. &
+             dim2 /= 2*this%num_dim ) THEN
+           PRINT *, "boundary_set_oscil_v : ", &
+                "Wrong dimension !"
+           stat_info = -1
+           GOTO 9999
+        END IF
+        
+        this%oscil_v(1:dim1,1:dim2) = &
+             d_oscil_v(1:dim1,1:dim2) 
+        
+9999    CONTINUE
+        
+        RETURN
+        
+      END SUBROUTINE  boundary_set_oscil_v
+      !***************************************
       
      
       SUBROUTINE boundary_set_shear_freq(this,d_shear_freq,stat_info)

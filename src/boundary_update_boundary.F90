@@ -105,6 +105,30 @@
               END DO ! i
            
            END IF ! oscillating
+
+           !************* Added by Adolfo for the integral fractional model ********
+           !-------------------------------------------------
+           ! For oscillating and translating wall, update shear and translational velocity.
+           !-------------------------------------------------
+           
+           IF ( num_wall > 0 .AND. &
+                this%num_osci_trans > 0 )THEN
+              
+              DO i = 1, 2*dim
+                 
+                 IF( this%shear_type(i) == 3 ) THEN
+                    
+                    this%shear_v(1:dim,i) = &
+                         this%oscil_v(1:dim,i) * &
+                         SIN(this%shear_freq(i) * time_v) + this%shear_v0(1:dim,i)
+                         !COS(this%shear_freq(i) * time_v)
+                           !cos is the original version
+                 END IF ! shear_type
+                 
+              END DO ! i
+           
+           END IF ! oscillating and translating
+           !*********************************************
         
            !-------------------------------------------------
            ! For Lees-Edwards boundary, update shear length.

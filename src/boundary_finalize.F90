@@ -33,6 +33,12 @@
            DEALLOCATE(this%shear_v)
         END IF
 
+        !********** Added by Adolfo for the integral fractional model ************
+        IF (ASSOCIATED(this%oscil_v)) THEN
+           DEALLOCATE(this%oscil_v)
+        END IF
+        !*********************************************************************
+
         IF (ASSOCIATED(this%shear_freq)) THEN
            DEALLOCATE(this%shear_freq)
         END IF

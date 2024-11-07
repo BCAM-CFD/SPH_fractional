@@ -40,6 +40,12 @@
         NULLIFY(this%shear_v)
         ALLOCATE(this%shear_v(2,4))
         this%shear_v(1:2,1:4) = 0.0_MK
+
+        !*********** Added by Adolfo for the integral fractional model ********
+        NULLIFY(this%oscil_v)
+        ALLOCATE(this%oscil_v(2,4))
+        this%oscil_v(1:2,1:4) = 0.0_MK
+        !**********************************************
         
         NULLIFY(this%shear_freq)
         ALLOCATE(this%shear_freq(4))
@@ -80,6 +86,9 @@
         this%num_wall_sym   = 0
         this%num_wall_solid = 0
         this%num_osci       = 0
+        !*************** Added by Adolfo for the integral fractional model ************
+        this%num_osci_trans = 0
+        !*******************************************************************************
         this%num_le         = 0
         this%num_shear      = 0
         
@@ -128,6 +137,12 @@
         NULLIFY(this%shear_v)
         ALLOCATE(this%shear_v(d_num_dim,2*d_num_dim))
         this%shear_v(1:d_num_dim,1:2*d_num_dim) = 0.0_MK
+
+        !*********** Added by Adolfo for the integral fractional model *******
+        NULLIFY(this%oscil_v)
+        ALLOCATE(this%oscil_v(d_num_dim,2*d_num_dim))
+        this%oscil_v(1:d_num_dim,1:2*d_num_dim) = 0.0_MK
+        !**********************************************************************
         
         NULLIFY(this%shear_freq)
         ALLOCATE(this%shear_freq(2*d_num_dim))
@@ -252,6 +267,28 @@
               CALL tool_print_msg(this%tool, "shear velocity", &
                    this%shear_v0(1:2,6), stat_info_sub)
            END IF
+
+           !************ Added by Adolfo for the integral fractional model **********
+           IF (dim==2) THEN
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+              this%oscil_v(2,1:2), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+              this%oscil_v(1,3:4), stat_info_sub)
+           ELSE IF (dim ==3 ) THEN
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(2:3,1), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(2:3,2), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(1,3),this%oscil_v(3,3), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(1,4),this%oscil_v(3,4), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(1:2,5), stat_info_sub)
+              CALL tool_print_msg(this%tool, "oscil velocity", &
+                   this%oscil_v(1:2,6), stat_info_sub)
+           END IF
+           !******************************************************
            
            CALL tool_print_msg(this%tool, "shear frequency", &
                 this%shear_freq(1:2*dim), stat_info_sub)

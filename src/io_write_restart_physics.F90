@@ -180,6 +180,9 @@
         TYPE(Boundary), POINTER         :: tboundary
         INTEGER, DIMENSION(:), POINTER  :: shear_type
         REAL(MK),DIMENSION(:,:),POINTER :: shear_v
+        !******** added by Adolfo for the integral fractional model *********
+        REAL(MK),DIMENSION(:,:),POINTER :: oscil_v
+        !********************************************************************
         REAL(MK),DIMENSION(:),POINTER   :: shear_freq
         INTEGER                         :: wall_rho_type
         INTEGER                         :: wall_noslip
@@ -244,11 +247,17 @@
         NULLIFY(bcdef)
         NULLIFY(tboundary)
         NULLIFY(shear_v)
+        !******* Added by Adolfo for the integral fractional model ********
+        NULLIFY(oscil_v)
+        !*****************************************************************
         NULLIFY(shear_type)
         NULLIFY(shear_freq)
         CALL physics_get_boundary(d_physics,tboundary,stat_info_sub)
         CALL boundary_get_shear_type(tboundary,shear_type,stat_info_sub)
         CALL boundary_get_shear_v(tboundary,shear_v,stat_info_sub)
+        !********* Added by Adolfo for the integral fractional model ******
+        CALL boundary_get_oscil_v(tboundary,oscil_v,stat_info_sub)
+        !******************************************************************
         CALL boundary_get_shear_freq(tboundary,shear_freq,stat_info_sub)
         wall_rho_type = &
              boundary_get_wall_rho_type(tboundary,stat_info_sub)
@@ -1121,6 +1130,28 @@
                 ',',shear_v(1,6),',',shear_v(2,6)
                  
         END IF
+
+        !*********** Added by Adolfo for the integral fractional model ***********
+        IF( num_dim == 2 ) THEN
+           WRITE(cbuf, '(4(A,E16.8))') &
+                'oscil_v       = ',oscil_v(2,1), &
+                ',', oscil_v(2,2), &
+                ',', oscil_v(1,3), &
+                ',', oscil_v(1,4)
+           
+           
+        ELSE IF ( num_dim == 3 ) THEN           
+           WRITE(cbuf, '(12(A,E16.8))') &
+                'oscil_v       = ',oscil_v(2,1),&
+                ',',oscil_v(3,1), &
+                ',',oscil_v(2,2),',',oscil_v(3,2), &
+                ',',oscil_v(1,3),',',oscil_v(3,3), &
+                ',',oscil_v(1,4),',',oscil_v(3,4), &
+                ',',oscil_v(1,5),',',oscil_v(2,5), &
+                ',',oscil_v(1,6),',',oscil_v(2,6)
+                 
+        END IF
+        !*****************************************
         
         WRITE(UNIT=this%restart_physics_unit,&
              FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
@@ -1214,6 +1245,12 @@
         IF(ASSOCIATED(shear_v)) THEN
            DEALLOCATE(shear_v)
         END IF
+
+        !******** Added by Adolfo for the integral fractional model **********
+        IF(ASSOCIATED(shear_v)) THEN
+           DEALLOCATE(shear_v)
+        END IF
+        !**********************************************************************
         
         IF(ASSOCIATED(shear_freq)) THEN
            DEALLOCATE(shear_freq)

@@ -100,7 +100,8 @@
         LOGICAL                         :: control
         INTEGER                         :: steps_since_last_saved_pos
         REAL(MK)                        :: a_damping !--McKinley model 2014 --
-        REAL(MK)                        :: b_damping !--McKinley model 2014 --        
+        REAL(MK)                        :: b_damping !--McKinley model 2014 --
+        REAL(MK), DIMENSION(3,6)        :: oscil_v        
         !***********************************************************
 	REAL(MK)                        :: tau_sm
 	REAL(MK)                        :: k_sm
@@ -1706,6 +1707,36 @@
                      shear_v(1,6),shear_v(2,6)
                  
              END IF
+
+             !************* Added by Adolfo for the integral fractional model ************
+          ELSE IF (carg == 'OSCIL_V') THEN
+             
+             !-----------------------------------------------
+             ! shear boundary's initial rate
+             !
+             ! 2D : shear velocity of x side, in y direction;
+             !      shear velocity of y side, in x direction;
+             !
+             !-----------------------------------------------
+             
+             IF ( num_dim == 2 ) THEN
+                
+                READ(cvalue,*,IOSTAT=ios, ERR=200)  &
+                     oscil_v(2,1),oscil_v(2,2), &
+                     oscil_v(1,3),oscil_v(1,4)
+                
+             ELSE IF ( num_dim == 3 ) THEN
+                
+                READ(cvalue,*,IOSTAT=ios, ERR=200)  &
+                     oscil_v(2,1),oscil_v(3,1), &
+                     oscil_v(2,2),oscil_v(3,2), &
+                     oscil_v(1,3),oscil_v(3,3), &
+                     oscil_v(1,4),oscil_v(3,4), &
+                     oscil_v(1,5),oscil_v(2,5), &
+                     oscil_v(1,6),oscil_v(2,6)
+                 
+             END IF
+             !**************************************************
              
              
           ELSE IF (carg == 'SHEAR_FREQ') THEN
@@ -1778,6 +1809,10 @@
                 shear_type(1:2*num_dim),stat_info_sub)
            CALL boundary_set_shear_v0(tboundary,&
                 shear_v(1:num_dim,1:2*num_dim),stat_info_sub)
+           !************ Added by Adolfo for the integral fractional model *********
+           CALL boundary_set_oscil_v(tboundary,&
+                oscil_v(1:num_dim,1:2*num_dim),stat_info_sub)
+           !************************************************************************
            CALL boundary_set_shear_freq(tboundary,&
                 shear_freq(1:2*num_dim),stat_info_sub)
            CALL boundary_set_wall_rho_type(tboundary, &
