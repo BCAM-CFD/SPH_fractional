@@ -101,6 +101,7 @@
         NULLIFY(this%s)
 
         !**** Added by Adolfo for the integral fractional model ****
+        NULLIFY(this%x_old)
         NULLIFY(this%dx_prev)
         NULLIFY(this%gradx_prev)
         !********************************************************

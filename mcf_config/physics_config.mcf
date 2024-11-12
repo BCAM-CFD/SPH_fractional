@@ -176,22 +176,25 @@ c_relax = 100.0
 
 tau = 2.
 
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>#
 #Variables of the integral fractional model
 E = 900.0
 alpha = 1.0
 beta = 0.0
 
-#time_saved is the time, in tau units, to integrate from previous steps
-time_saved = 10.0
-
+# time_saved is the time, in tau units, to integrate from previous steps
 # Npoints_integration  is  the  number  of points  where  grad  r'  is
 # calculated , being r' the previous  positions, to do the integral to
 # calculate the stress.
+# steps_since_last_saved_pos stores the number of steps that have past 
+# since the most recent position was stored. 
+time_saved = 10.0
 Npoints_integration = 88
-
-#used for the damping function h(gamma)= 1/(1+a*gamma**b)
+steps_since_last_saved_pos =  0
+# Damping function h(gamma)= 1/(1+a*gamma**b)
 a_damping = 0.3
 b_damping = 2.0
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<#
 
 #### Parameters not needed in the fractional integral model ####
 

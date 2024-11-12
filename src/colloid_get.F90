@@ -1175,7 +1175,7 @@
 	 !--- Modified by Adolfo ---
          ALLOCATE(d_vector(4,this%num_colloid))
 
-         WRITE(*,*) d_vector(:,1)
+!         WRITE(*,*) d_vector(:,1)
         
         d_vector(:,:) = this%acc_vector(:,1:this%num_colloid)
         
