@@ -808,6 +808,8 @@
              ! number of molecules dumbbells.
              !-----------------------------------------------
              
+             READ(cvalue,*,IOSTAT=ios, ERR=200) n_p
+
              CALL physics_set_n_p(phys, n_p,stat_info_sub)
              
              
@@ -908,12 +910,14 @@
              CALL physics_set_freq_integration(phys,freq_integration,stat_info_sub)
              CALL physics_set_Npoints_integration(phys,Npoints_integration,stat_info_sub)
 
-             !-- Next variable is initialized --
-             steps_since_last_saved_pos = 0
-             CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub) 
+             !**** Added by Luca for the integral fractional model ****
+          ELSE IF (carg == 'STEPS_SINCE_LAST_SAVED_POS') THEN
+             
+               READ(cvalue,'(L)',IOSTAT=ios,ERR=200) steps_since_last_saved_pos
+               CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub)     
              !************************************************************
 
-           !**** Added by Adolfo for the integral fractional model ****
+           !**** Added by Adolfo for the integral fractional model ****                      
            ELSE IF (carg == 'A_DAMPING') THEN
              
              !-----------------------------------------------

@@ -102,7 +102,7 @@
         REAL(MK)                        :: n_p
 
         !**** Added by Adolfo for the integral fractional model ****        
-        !*** For the fractional model, a lot of variables are missing here ****
+        !*** For the fractional model, a lot of variables were missing here (2023). Now should work (2024) ****
         INTEGER :: Nmodes
         CHARACTER(len=2*MAX_CHAR)	:: mode
         REAL(MK)                        :: E
@@ -112,6 +112,7 @@
         REAL(MK)                        :: b_damping
         REAL(MK)                        :: time_saved
         INTEGER                         :: Npoints_integration
+        REAL(MK)                        :: steps_since_last_saved_pos
         !**************************************************************        
         REAL(MK)                        :: kt_p
         LOGICAL                         :: eigen_dynamics
@@ -620,6 +621,11 @@
 
            Npoints_integration = physics_get_Npoints_integration(d_physics,stat_info_sub) 
            WRITE(cbuf, '(A,I10)') 'Npoints_integration = ', Npoints_integration
+           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
+           WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
+
+           steps_since_last_saved_pos = physics_get_steps_since_last_saved_pos(this%phys,stat_info_sub)
+           WRITE(cbuf, '(A,I10)') 'steps_since_last_saved_pos = ', steps_since_last_saved_pos
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
            !*********************************************************************
