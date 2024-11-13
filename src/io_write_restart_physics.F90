@@ -112,7 +112,7 @@
         REAL(MK)                        :: b_damping
         REAL(MK)                        :: time_saved
         INTEGER                         :: Npoints_integration
-        REAL(MK)                        :: steps_since_last_saved_pos
+        INTEGER                         :: steps_since_last_saved_pos
         !**************************************************************        
         REAL(MK)                        :: kt_p
         LOGICAL                         :: eigen_dynamics
@@ -602,7 +602,6 @@
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
 
-
           ! Added by Luca
            a_damping = physics_get_a_damping(d_physics,stat_info_sub) 
            WRITE(cbuf, '(A,E16.8)') 'a_damping = ', a_damping
@@ -613,6 +612,7 @@
            WRITE(cbuf, '(A,E16.8)') 'b_damping = ', b_damping
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub)  TRIM(cbuf)
            WRITE(UNIT=this%restart_physics_unit,FMT='(A)',IOSTAT=stat_info_sub) ' '
+           !-- end of added by Luca --
 
            time_saved = physics_get_time_saved(d_physics,stat_info_sub) 
            WRITE(cbuf, '(A,E16.8)') 'time_saved = ', time_saved
@@ -1253,8 +1253,8 @@
         END IF
 
         !******** Added by Adolfo for the integral fractional model **********
-        IF(ASSOCIATED(shear_v)) THEN
-           DEALLOCATE(shear_v)
+        IF(ASSOCIATED(oscil_v)) THEN
+           DEALLOCATE(oscil_v)
         END IF
         !**********************************************************************
         

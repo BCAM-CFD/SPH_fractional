@@ -201,6 +201,7 @@
         END DO
 
         !*** Added by Adolfo for the fractional integral model ****
+        this%num_osci_trans = 0
         DO i =1, dim
            IF ( d_shear_type(i) == 3 ) THEN
               this%num_osci_trans = this%num_osci_trans + 1

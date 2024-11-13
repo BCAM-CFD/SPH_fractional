@@ -610,7 +610,13 @@
         num_part_all  = &
              particles_get_num_part_all(this%particles,stat_info_sub)
         
-        
+        !************** Added by Adolfo to test the reading of mcf_restart_memory *********
+             IF (step_current == step_start) THEN
+               CALL io_write_restart_memory(this%io,&
+                    rank,0,this%particles,num_part_real,stat_info_sub)
+            ENDIF
+            !**********************************************************************************
+            
         !----------------------------------------------------
         ! Get all particles' positions (including ghosts),
       	! to build neighbor list(e.g., cell list).
@@ -649,7 +655,7 @@
         
         
         !----------------------------------------------------
-        ! For symmtery inter-process communication :
+        ! For symmetry inter-process communication :
         !
         ! swap the send and receive buffer,in order to send
         ! contribution of ghost particles to their hosts

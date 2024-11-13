@@ -31,7 +31,7 @@
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
         !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
-        ! at UNED, in Madrid, Spain.
+        !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.

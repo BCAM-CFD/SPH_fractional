@@ -5,6 +5,8 @@ import os.path as op
 import subprocess
 import datetime
 import shlex
+from subprocess import PIPE, run
+
 
 def modification_date(filename):
     t = os.path.getmtime(filename)
@@ -29,5 +31,12 @@ working_file="/scratch/lsantelli/1apps/mcf"+date
 shutil.copy2("./src/mcf",bkp_file)
 
 processToCall= "rsync -azPS {} {}".format(bkp_file, working_file)
-subprocess.call(shlex.split(processToCall))
-   
+# subprocess.call(shlex.split(processToCall))
+result = run(shlex.split(processToCall),stdout=PIPE, stderr=PIPE, universal_newlines=True )
+#print("ciao",result.returncode, "due",result.stdout, "tre",result.stderr)
+if result.stdout=="sending incremental file list\n":
+    print("NOT COPIED:\nNO NEWER FILE CREATED")
+    #print(result.stdout)
+else:
+    print("COPIED")
+    print(result.stdout)

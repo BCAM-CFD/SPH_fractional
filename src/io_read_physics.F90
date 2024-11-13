@@ -913,7 +913,8 @@
              !**** Added by Luca for the integral fractional model ****
           ELSE IF (carg == 'STEPS_SINCE_LAST_SAVED_POS') THEN
              
-               READ(cvalue,'(L)',IOSTAT=ios,ERR=200) steps_since_last_saved_pos
+               !READ(cvalue,'(L)',IOSTAT=ios,ERR=200) steps_since_last_saved_pos
+               READ(cvalue,*,IOSTAT=ios,ERR=200) steps_since_last_saved_pos
                CALL physics_set_steps_since_last_saved_pos(phys,steps_since_last_saved_pos,stat_info_sub)     
              !************************************************************
 
