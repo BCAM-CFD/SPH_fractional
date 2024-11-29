@@ -172,7 +172,6 @@
         
         output(cur_dim,1:num_part) = pid(1:num_part)
 
-        cur_dim = cur_dim+ 1 
         
         !************* Commented by Adolfo ***************
 !        output(cur_dim:cur_dim+dim**2-1,1:num_part) = &
@@ -208,6 +207,7 @@
 !!$        ENDIF
 
         !********* Added by Adolfo for the integral fractional model ********
+        cur_dim = cur_dim + 1 
         counter = 0
         DO K = 1, dim
            DO J = 1, dim
@@ -218,7 +218,7 @@
               counter = counter + 1
            ENDDO
         ENDDO
-        cur_dim = cur_dim + 1
+        cur_dim = cur_dim + dim**2
         output(cur_dim, 1:num_part) = p(1:num_part)
         !********************************************************************
 
