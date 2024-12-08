@@ -182,6 +182,7 @@
         REAL(MK),DIMENSION(3,6)         :: wall_drag_pv
         REAL(MK),DIMENSION(3,6)         :: wall_drag_pr
 #endif
+        INTEGER :: I
 
         !----------------------------------------------------
         ! Number of real, all and ghost particles :
@@ -611,12 +612,12 @@
              particles_get_num_part_all(this%particles,stat_info_sub)
         
         !************** Added by Adolfo to test the reading of mcf_restart_memory *********
-             IF (step_current == step_start) THEN
-               CALL io_write_restart_memory(this%io,&
-                    rank,0,this%particles,num_part_real,stat_info_sub)
-            ENDIF
-            !**********************************************************************************
-            
+        IF (step_current == step_start) THEN
+           CALL io_write_restart_memory(this%io,&
+                rank,0,this%particles,num_part_real,stat_info_sub)
+        ENDIF
+        !**********************************************************************************
+        
         !----------------------------------------------------
         ! Get all particles' positions (including ghosts),
       	! to build neighbor list(e.g., cell list).
@@ -746,7 +747,7 @@
                 'Updating ghosts with x, rho, v failed !'
            stat_info = -1
            GOTO 9999
-        END IF
+        END IF        
         
         !----------------------------------------------------
         ! The number of real, ghost and all particles
@@ -859,8 +860,15 @@
                 l_map_v  = .TRUE., &
                 l_map_gradx_prev = .TRUE., &
                 stat_info=stat_info_sub)
-
-           !***************************************************************
+           !--- Next should routine should be checked before use --
+!!$           CALL particles_correct_gradx_prev(this%particles, num_part_all, stat_info_sub)
+!!$           IF(stat_info_sub /=0) THEN
+!!$              PRINT *, "marching_marching: ", &
+!!$                   "Correcting gradx_prev tensor failed !"
+!!$              stat_info = -1
+!!$              GOTO 9999
+!!$           END IF
+           !***************************************************************           
 
            !******** Modified by Adolfo for the integral fractional model *****
            CALL particles_compute_pressure_tensor_integral(this%particles,&
@@ -946,6 +954,7 @@
 !!$                l_map_au  = p_energy, &
 !!$                stat_info = stat_info_sub)
            !**************************************************************************
+
 #endif
            
            IF ( stat_info_sub /= 0 ) THEN
@@ -997,7 +1006,6 @@
                 num_part_all,stat_info_sub)
         ENDIF
         !*******************************************************
-
         
         !----------------------------------------------------
         ! Apply body forces to real fluid particles.

@@ -53,23 +53,23 @@ SUBROUTINE particles_compute_interaction(this,stat_info)
   !
   !               V0.1 16.03 2009, original
   !----------------------------------------------------
-        ! This code is  based on the original MCF code  developed by Xin Bian.
-        ! The  current version  has  been developed  in collaboration  between
-        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
-        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
-        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
-        ! at UNED, in Madrid, Spain.
-        !
-        ! Developers:
-        !     Xin Bian.
-        !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
-        !
-        ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
-        !          mellero@bcamath.org
+  ! This code is  based on the original MCF code  developed by Xin Bian.
+  ! The  current version  has  been developed  in collaboration  between
+  ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+  !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+  ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+  !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+  ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+  !   at UNED, in Madrid, Spain.
+  !
+  ! Developers:
+  !     Xin Bian.
+  !     Adolfo Vazquez-Quesada.
+  !     Luca Santelli.
+  !
+  ! Contact: a.vazquez-quesada@fisfun.uned.es
+  !          lsantelli@bcamath.org
+  !          mellero@bcamath.org
   !----------------------------------------------------
 
   !----------------------------------------------------
@@ -556,25 +556,25 @@ SUBROUTINE particles_compute_interaction(this,stat_info)
   !----------------------------------------------------
 
   IF ( .NOT. Newtonian ) THEN
-     
+
      IF(ASSOCIATED(this%vgt)) THEN
         DEALLOCATE(this%vgt)
      END IF
-     
+
      IF(  symmetry ) THEN
-        
+
         ALLOCATE(this%vgt(num_dim**2,this%num_part_all),&
              STAT=stat_info_sub)
-              
+
      ELSE
-        
+
         ALLOCATE(this%vgt(num_dim**2,this%num_part_real),&
              STAT=stat_info_sub)
-        
+
      END IF
-     
+
      this%vgt(:,:) = 0.0_MK
-     
+
   END IF
 
   !----------------------------------------------------
@@ -1518,9 +1518,9 @@ SUBROUTINE particles_compute_gradx_prev(this, step, stat_info)
                           DO b = 1, num_dim  ! ---, row direction
                              x_ip_prev = this%x(b,ip) -this%dx_prev((b-1)*Npoints_integration+T,ip)
                              x_jp_prev = this%x(b,jp) -this%dx_prev((b-1)*Npoints_integration+T,jp)
-                             
+
                              DO a = 1, num_dim ! |,  column direction
-                                !****** We calculate (grad r')^{ab} = grad^a r'^b
+                                !****** We calculate (grad r')^{ab} = grad^a r'^b   (in tensorial components) *******
                                 n = (a-1)*num_dim + b
 
                                 !*** This is rij(a) r'ji(b)/dij *dW/dr =-rij(a) e'ij(b) *dW/dr
@@ -1556,7 +1556,6 @@ SUBROUTINE particles_compute_gradx_prev(this, step, stat_info)
      END DO ! k:  kcstart, kcend
 
   END DO ! idom : 1,num_sub
-
 
   !----------------------------------------------------
   ! Return.
@@ -1597,26 +1596,134 @@ SUBROUTINE particles_compute_gradx_prev(this, step, stat_info)
 END SUBROUTINE particles_compute_gradx_prev
 !*****************************************************
 
-!***********************************
-! Added by Adolfo. Subroutine to debug and find errors.
-!***********************************
-SUBROUTINE scratch(this, rank, num, step, stat_info)
-  IMPLICIT NONE
-  TYPE(Particles), INTENT(INOUT)  :: this
-  INTEGER, INTENT(IN)             :: rank
-  INTEGER, INTENT(IN)             :: num
-  INTEGER, INTENT(IN)             :: step
-  INTEGER, INTENT(OUT)		:: stat_info
-  INTEGER :: T
-  INTEGER                         ::  Npoints_integration
-  INTEGER :: I, a, b, n, dim
+!**** Subroutine added by Adolfo for the integral fractional model ****
+!********** The subroutine must be checked before use **************
+SUBROUTINE particles_correct_gradx_prev(this, num, stat_info)
+  !----------------------------------------------------
+  ! Subroutine :  particles_correct_gradx_prev
+  !----------------------------------------------------
+  !
+  ! Purpose    :  Correct the gradx_prev array, due to the presence of walls
+  !               
+  !----------------------------------------------------
 
-  IF (num .NE. SIZE(this%vgt, 2)) THEN
-     WRITE(*,*) 'ttt ', rank, step
-     WRITE(*,*) rank, num, SIZE(this%vgt,2)
-  ELSE
-     WRITE(*,*) 'sss ', rank, step
+  !----------------------------------------------------
+  ! Arguments
+  !
+  ! this           : an object of Particles Class.
+  ! num            : number of particles needed updated,
+  !                  i.e. first num particles in this%x 
+  !                  are operated.
+  ! stat_info      : return flag of status.
+  !----------------------------------------------------
+
+  TYPE(Particles), INTENT(INOUT)          :: this
+  INTEGER, INTENT(IN)                     :: num
+  INTEGER, INTENT(OUT)                    :: stat_info
+
+  !----------------------------------------------------
+  ! Local variables
+  !----------------------------------------------------
+
+  INTEGER                                 :: stat_info_sub
+  INTEGER                                 :: dim
+  INTEGER                                 :: i,j,k,T
+  REAL(MK)                                :: a, b, c, d, e, f
+  INTEGER                                 ::  Npoints_integration
+  INTEGER                                 :: n
+  REAL(MK)                                :: corr
+  REAL(MK)                                :: h
+  REAL(MK)                                :: cut_off
+  REAL(MK)                                :: y_old
+  REAL(MK), DIMENSION(:), POINTER         :: min_phys
+  REAL(MK), DIMENSION(:), POINTER         :: max_phys
+  
+  !----------------------------------------------------
+  ! Initialization of variables.
+  !----------------------------------------------------
+
+  stat_info     = 0
+  stat_info_sub = 0
+
+  !----------------------------------------------------
+  ! Calculation only for real particles.
+  !----------------------------------------------------
+
+  IF( num > this%num_part_all) THEN
+     PRINT *, "particles_compute_pt : ", &
+          "num > num_part_all, wrong !"
+     stat_info = -1
+     GOTO 9999      
+  END IF
+
+  cut_off     = physics_get_cut_off(this%phys,stat_info_sub)
+  dim         = physics_get_num_dim(this%phys,stat_info_sub)
+  NULLIFY(min_phys)
+  NULLIFY(max_phys)
+  CALL physics_get_min_phys(this%phys, min_phys, stat_info_sub)
+  CALL physics_get_max_phys(this%phys, max_phys, stat_info_sub)  
+
+  !-- Parameters fitted for the quintic spline --
+  ! if the particle at a distance to a wall h < rcut, the correction is
+  ! gradr = gradr / (1.0 - corr(h)), where
+  !  corr(h) = a*x^5.0 + b*x^4.0 + c*x^3.0 + d*x^2.0 + e*x + f
+  !    being x = h/cut_off
+  a =  2.82179_MK     
+  b = -7.15177_MK         
+  c =  5.26587_MK     
+  d =  0.278871_MK     
+  e = -1.70965_MK     
+  f =  0.498535_MK     
+
+  dim   = physics_get_num_dim(this%phys,stat_info_sub)
+  Npoints_integration = physics_get_Npoints_integration(this%phys,stat_info)
+
+  IF (dim .NE. 2) THEN
+     WRITE(*,*) ' *** particles_correct_gradx_prev error: the correction of the walls to gradx_prev is only done for 2D ***'
+     stat_info = -1
+     GOTO 9999
   ENDIF
 
-END SUBROUTINE scratch
+  DO K = 1, num !-- particle index
 
+     !-- This is done only in fluid particles --
+     !********** At this moment we are correcting only the horizontal walls **********
+     IF (this%id(2,K) == 0) THEN
+
+        DO T = 1, Npoints_integration
+           y_old = this%x(2,K) - this%dx_prev((2-1)*Npoints_integration+T,K)
+           h = 1000000000.0_MK !This should be programmed better
+           IF ((y_old - min_phys(2)) < cut_off) THEN !-- Close to the bottom wall --
+              h = (y_old - min_phys(2)) / cut_off
+           ELSE IF ((max_phys(2) - y_old) < cut_off) THEN !-- Close to the top wall --
+              h = (max_phys(2) - y_old) / cut_off
+           ENDIF
+           IF (h < 1) THEN
+              corr = a*h**5 + b*h**4 + c*h**3 + d*h**2 + e*h + f              
+              DO J = 1, dim
+                 DO I = 1, dim
+                    n = (I-1)*dim + J                    
+                    
+                    this%gradx_prev((n-1)*Npoints_integration+T, K) = this%gradx_prev((n-1)*Npoints_integration+T, K) / &
+                         (1.0_MK - corr)
+                 ENDDO
+              ENDDO
+           ENDIF           
+        ENDDO
+     ENDIF
+  ENDDO
+
+9999 CONTINUE
+  
+  IF(ASSOCIATED(min_phys)) THEN
+     DEALLOCATE(min_phys) 
+  END IF
+
+  IF(ASSOCIATED(max_phys)) THEN
+     DEALLOCATE(max_phys) 
+  END IF
+  
+  RETURN
+
+END SUBROUTINE particles_correct_gradx_prev
+   !*********************************************************      

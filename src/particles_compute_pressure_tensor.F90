@@ -1,82 +1,82 @@
-      SUBROUTINE particles_compute_pressure_tensor(this,num,stat_info)
-        !----------------------------------------------------
-        ! Subroutine :  particles_compute_pressure_tensor
-        !----------------------------------------------------
-        !
-        ! Purpose    :  Compute the pressure tensor
-        !               of Non-Newtonian
-        !               oldroyd-B model.
-        !               
-        !
-        ! Reference  :  Vazquez-Quesada, Ellero, Espanol
-        !               Phyical Review E 79. 056707, 2009.
-        !
-        ! Remark     :
-        !
-        ! Revision   :  V0.1  25.08.2010
-        !               The osmotic pressure is added in the
-        !               computation of the pressure tensor.
-        !               Also was deleted the dim2 variable
-        !               because it was unnecesary.
-        !               (Adolfo)
-        !               
-        !               V0.1  16.04.2010, original version.
-        !               Originally was done in 
-        !               particle-particle interaction,
-        !               which saved memory for a matrix of
-        !               each particle, but
-        !               noted by Adolf Vazquez-Quesada that
-        !               it wasn't efficient, since pressure
-        !               tensure of particle i is not related
-        !               to particle j at all.
-        !               Considering memory and speed of the
-        !               code, we decided to put it seperatedly.
-        !
-        !----------------------------------------------------
-        ! This code is  based on the original MCF code  developed by Xin Bian.
-        ! The  current version  has  been developed  in collaboration  between
-        ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
-        ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
-        ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
-        ! at UNED, in Madrid, Spain.
-        !
-        ! Developers:
-        !     Xin Bian.
-        !     Adolfo Vazquez-Quesada.
-        !     Luca Santelli.
-        !
-        ! Contact: a.vazquez-quesada@fisfun.uned.es
-        !          lsantelli@bcamath.org
-        !          mellero@bcamath.org
-        !----------------------------------------------------
-        
-        !----------------------------------------------------
-        ! Arguments
-        !
-        ! this           : an object of Particles Class.
-        ! num            : number of particles needed updated,
-        !                  i.e. first num particles in this%x 
-        !                  are operated.
-        ! stat_info      : return flag of status.
-        !----------------------------------------------------
-        
-        TYPE(Particles), INTENT(INOUT)          :: this
-        INTEGER, INTENT(IN)                     :: num
-        INTEGER, INTENT(OUT)                    :: stat_info
-        
-        !----------------------------------------------------
-        ! Local variables
-        !----------------------------------------------------
+SUBROUTINE particles_compute_pressure_tensor(this,num,stat_info)
+  !----------------------------------------------------
+  ! Subroutine :  particles_compute_pressure_tensor
+  !----------------------------------------------------
+  !
+  ! Purpose    :  Compute the pressure tensor
+  !               of Non-Newtonian
+  !               oldroyd-B model.
+  !               
+  !
+  ! Reference  :  Vazquez-Quesada, Ellero, Espanol
+  !               Phyical Review E 79. 056707, 2009.
+  !
+  ! Remark     :
+  !
+  ! Revision   :  V0.1  25.08.2010
+  !               The osmotic pressure is added in the
+  !               computation of the pressure tensor.
+  !               Also was deleted the dim2 variable
+  !               because it was unnecesary.
+  !               (Adolfo)
+  !               
+  !               V0.1  16.04.2010, original version.
+  !               Originally was done in 
+  !               particle-particle interaction,
+  !               which saved memory for a matrix of
+  !               each particle, but
+  !               noted by Adolf Vazquez-Quesada that
+  !               it wasn't efficient, since pressure
+  !               tensure of particle i is not related
+  !               to particle j at all.
+  !               Considering memory and speed of the
+  !               code, we decided to put it seperatedly.
+  !
+  !----------------------------------------------------
+  ! This code is  based on the original MCF code  developed by Xin Bian.
+  ! The  current version  has  been developed  in collaboration  between
+  ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
+  !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+  ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
+  !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
+  ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
+  !   at UNED, in Madrid, Spain.
+  !
+  ! Developers:
+  !     Xin Bian.
+  !     Adolfo Vazquez-Quesada.
+  !     Luca Santelli.
+  !
+  ! Contact: a.vazquez-quesada@fisfun.uned.es
+  !          lsantelli@bcamath.org
+  !          mellero@bcamath.org
+  !----------------------------------------------------
 
-        
-        INTEGER                                 :: stat_info_sub
-        INTEGER                                 :: dim
-        INTEGER                                 :: i,j,k
-        REAL(MK)                                :: n_p, kt_p, G
+  !----------------------------------------------------
+  ! Arguments
+  !
+  ! this           : an object of Particles Class.
+  ! num            : number of particles needed updated,
+  !                  i.e. first num particles in this%x 
+  !                  are operated.
+  ! stat_info      : return flag of status.
+  !----------------------------------------------------
 
-        !**** Commented by Adolfo to avoid incompatibilities with the integral fractional model ****
+  TYPE(Particles), INTENT(INOUT)          :: this
+  INTEGER, INTENT(IN)                     :: num
+  INTEGER, INTENT(OUT)                    :: stat_info
+
+  !----------------------------------------------------
+  ! Local variables
+  !----------------------------------------------------
+
+
+  INTEGER                                 :: stat_info_sub
+  INTEGER                                 :: dim
+  INTEGER                                 :: i,j,k
+  REAL(MK)                                :: n_p, kt_p, G
+
+  !**** Commented by Adolfo to avoid incompatibilities with the integral fractional model ****
 !!$        !----------------------------------------------------
 !!$        ! Initialization of variables.
 !!$        !----------------------------------------------------
@@ -142,13 +142,13 @@
 !!$           END DO
 !!$           
 !!$        END DO
-        
-        
-9999    CONTINUE      
-        
-        RETURN
-        
-      END SUBROUTINE particles_compute_pressure_tensor
+
+
+9999 CONTINUE      
+
+  RETURN
+
+END SUBROUTINE particles_compute_pressure_tensor
 
 !**** Subroutine added by Adolfo for the integral fractional model ****      
 SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, rank, stat_info)
@@ -232,7 +232,7 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   freq_integration = physics_get_freq_integration(this%phys,stat_info)
   Npoints_integration = physics_get_Npoints_integration(this%phys,stat_info)
   a_damping  = physics_get_a_damping(this%phys,stat_info_sub)
-  b_damping  = physics_get_b_damping(this%phys,stat_info_sub)    
+  b_damping  = physics_get_b_damping(this%phys,stat_info_sub)  
 
   CALL physics_get_mem_function(this%phys, mem_function, stat_info_sub)
 
@@ -284,27 +284,25 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
   !- tcut is calculated -
   ! **  Note that tcut is negative **
   tcut = -( steps_since_last_saved_pos + freq_integration ) * dt
-  
+
   !- Relaxation modulus is computed (** note that -tcut is positive **) -
   G = E_mod * tau**beta
   V = E_mod * tau**alpha
-  
+
   x = -G/V * (-tcut)**(alpha-beta)
   CALL mittag_leffler(Mit_Lef, x, alpha-beta, 1.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)
   IF (stat_info == -1) THEN
      GOTO 9999 !-- End of subroutine --
   ENDIF
   relax_modulus = G * (-tcut)**(-beta)  * Mit_Lef
-  
+
   !-- More quantities are calculated --
   CALL mittag_leffler(Mit_Lef, x, alpha-beta, 2.0_MK-beta, 5, 1000, 1.0E-9_MK, stat_info)     
 
-  ! The one used now
-  ! The memory is not computed from eq (23) Santelli 2024, but rather as a chain starting from
-  ! the relax modulus. Here we compute the term necessary for the analytical part of eq (36).
-  integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
+  ! The one used now 
+  ! integral = (-(-tcut) * relax_modulus  + G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   ! The one I gave Luca to test.
-  ! integral = ((-tcut) * relax_modulus  - G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
+  integral = ((-tcut) * relax_modulus  - G * (-tcut)**(-beta+1.0_MK)  * Mit_Lef)
   !-----------------------------------------------------------------------
 
   !----------------------------------------------------
@@ -323,127 +321,150 @@ SUBROUTINE particles_compute_pressure_tensor_integral(this, num, initial_step, r
 
   DO K = 1, num !-- particle index
 
-     !-- The Delta tensor of particle K is calculated at all previous times --
-     DO T = 1, Npoints_integration
-        DO J = 1, dim
-           DO I = 1, dim
-              n = (I-1)*dim + J
-              Delta(I,J) = this%gradx_prev((n-1)*Npoints_integration+T, K)
+     !-- This is done only in fluid particles --
+     IF (this%id(2,K) == 0) THEN
+
+        !-- The Delta tensor of particle K is calculated at all previous times --
+        DO T = 1, Npoints_integration
+           DO J = 1, dim
+              DO I = 1, dim
+                 n = (I-1)*dim + J
+                 Delta(I,J) = this%gradx_prev((n-1)*Npoints_integration+T, K)
+              ENDDO
            ENDDO
-        ENDDO
-
-        !-- Tensor E is calculated. E is the inverse of Delta --
-        IF (dim == 2) THEN
-           det = Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1)
-           E(1,1) = Delta(2,2)/det
-           E(2,1) = -Delta(2,1)/det
-           E(1,2) = -Delta(1,2)/det
-           E(2,2) = Delta(1,1)/det
-        ELSE !-- dim == 3 --
-           det = Delta(1,1) * Delta(2,2) * Delta(3,3) + &
-                Delta(1,2) * Delta(2,3) * Delta(3,1) + &
-                Delta(2,1) * Delta(3,2) * Delta(1,3) - &
-                Delta(1,3) * Delta(2,2) * Delta(3,1) - &
-                Delta(2,3) * Delta(3,2) * Delta(1,1) - &
-                Delta(1,2) * Delta(2,1) * Delta(3,3)
-           E(1,1) = (Delta(2,2)*Delta(3,3) - Delta(2,3)*Delta(3,2))/det
-           E(2,1) = -(Delta(2,1)*Delta(3,3) - Delta(2,3)*Delta(3,1))/det
-           E(3,1) = (Delta(2,1)*Delta(3,2) - Delta(2,2)*Delta(3,1))/det
-           E(1,2) = -(Delta(1,2)*Delta(3,3) - Delta(1,3)*Delta(3,2))/det
-           E(2,2) = (Delta(1,1)*Delta(3,3) - Delta(1,3)*Delta(3,1))/det
-           E(3,2) = -(Delta(1,1)*Delta(3,2) - Delta(1,2)*Delta(3,1))/det
-           E(1,3) = (Delta(1,2)*Delta(2,3) - Delta(1,3)*Delta(2,2))/det
-           E(2,3) = -(Delta(1,1)*Delta(2,3) - Delta(1,3)*Delta(2,1))/det
-           E(3,3) = (Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1))/det
-        ENDIF
-
-        gamma0(:,:,T) = -MATMUL(E, Transpose(E))
-        DO I = 1, dim
-           gamma0(I,I,T) = gamma0(I,I,T) + 1.0_MK
-        ENDDO
-
-     ENDDO
-
-     !-- If steps_since_last_saved_pos == 0, it is difficult to calculate the
-     !   stress with precision, so we are going to keep, in this case, the stress from the previous
-     !   step.
-     DO J = 1, dim ! --- row direction
-        
-        DO I = 1, dim  ! | column direction
            
-           !-- Integration is done --
-           ! The integration is done in two parts. The relevant points to integrate are
-           ! -s0 - N fi *** ... *** -s0 - 3 fi *** -s0 - 2 fi *** -s0 - fi *** -s0 *** Curr time(0)
-           ! where s0 is steps_since_last_saved_pos, and fi the frequency which we are storing
-           ! the previous positions
-           ! The first part of the integration, between -s0 - N fi and -s0 - fi is done
-           ! with a Simpson's rule. 
-           ! The second part of the integration, between -s0-fi, -s0 and 0 times is done by 
-           ! interpolating a polynomial on those points and integrating it.
-           DO T = 1, (Npoints_integration-1)/2 !-- Variables at previous time steps ---
-              
-              T0     = 2*T
-              T0_mem = freq_integration * T0 - steps_since_last_saved_pos 
-              
-              !--- The tensor gamma_[0] and the memory function are found ---
-              ! --- Maxwell version ---
+           ! IF (T == 1) THEN
+           !    WRITE(*,*) this%x(1:2,K), Delta(1,1), Delta(1,2), Delta(2,1), Delta(2,2), K
+           ! ENDIF
+           ! IF (K == 420) THEN
+           !    WRITE(*,*) T, Delta(1,1), Delta(1,2), Delta(2,1), Delta(2,2)
+           ! ENDIF
+
+           !-- Tensor E is calculated. E is the inverse of Delta --
+           IF (dim == 2) THEN
+              det = Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1)
+              E(1,1) =  Delta(2,2)/det
+              E(2,1) = -Delta(2,1)/det
+              E(1,2) = -Delta(1,2)/det
+              E(2,2) =  Delta(1,1)/det
+              ! gamma_[0] = 1 - E * E^t
+              gamma0(1,1,T) = 1.0_MK-E(1,1)**2.0 - E(2,1)**2.0
+              gamma0(1,2,T) = -E(1,2) * E(1,1) - E(2,1) * E(2,2)
+              gamma0(2,1,T) = -E(1,2) * E(1,1) - E(2,1) * E(2,2)
+              gamma0(2,2,T) = 1.0_MK - E(1,2)**2.0 - E(2,2)**2.0
+           ELSE !-- dim == 3 --
+              det = Delta(1,1) * Delta(2,2) * Delta(3,3) + &
+                   Delta(1,2) * Delta(2,3) * Delta(3,1) + &
+                   Delta(2,1) * Delta(3,2) * Delta(1,3) - &
+                   Delta(1,3) * Delta(2,2) * Delta(3,1) - &
+                   Delta(2,3) * Delta(3,2) * Delta(1,1) - &
+                   Delta(1,2) * Delta(2,1) * Delta(3,3)
+              E(1,1) = (Delta(2,2)*Delta(3,3) - Delta(2,3)*Delta(3,2))/det
+              E(2,1) = -(Delta(2,1)*Delta(3,3) - Delta(2,3)*Delta(3,1))/det
+              E(3,1) = (Delta(2,1)*Delta(3,2) - Delta(2,2)*Delta(3,1))/det
+              E(1,2) = -(Delta(1,2)*Delta(3,3) - Delta(1,3)*Delta(3,2))/det
+              E(2,2) = (Delta(1,1)*Delta(3,3) - Delta(1,3)*Delta(3,1))/det
+              E(3,2) = -(Delta(1,1)*Delta(3,2) - Delta(1,2)*Delta(3,1))/det
+              E(1,3) = (Delta(1,2)*Delta(2,3) - Delta(1,3)*Delta(2,2))/det
+              E(2,3) = -(Delta(1,1)*Delta(2,3) - Delta(1,3)*Delta(2,1))/det
+              E(3,3) = (Delta(1,1)*Delta(2,2) - Delta(1,2)*Delta(2,1))/det
+
+              !---- This is still to be programmed in 3D ------
+              stat_info = -1
+              WRITE(*,*) '**** Particles_compute_pressure_tensor_integral error: 3D is still not implemented. '
+              WRITE(*,*) 'You only have to program the calculation of gamma_[0].'
+              GOTO 9999 !-- End of subroutine --
+
+           ENDIF
+
+           !************ Next line is not working, not sure why. This has been reprogrammed above. ***
+!!$           gamma0(:,:,T) = -MATMUL(E, Transpose(E))
+!!$           DO I = 1, dim
+!!$              gamma0(I,I,T) = gamma0(I,I,T) + 1.0_MK
+!!$           ENDDO
+           
+        ENDDO
+        
+        !--- The integration of the stress is done here ---
+        DO J = 1, dim ! --- row direction
+
+           DO I = 1, dim  ! | column direction
+
+              !-- Integration is done --
+              ! The integration is done in two parts. The relevant points to integrate are
+              ! -s0 - N fi *** ... *** -s0 - 3 fi *** -s0 - 2 fi *** -s0 - fi *** -s0 *** Curr time(0)
+              ! where s0 is steps_since_last_saved_pos, and fi the frequency which we are storing
+              ! the previous positions
+              ! The first part of the integration, between -s0 - N fi and -s0 - fi is done
+              ! with a Simpson's rule. 
+              ! The second part of the integration, between -s0-fi, -s0 and 0 times is done by 
+              ! interpolating a polynomial on those points and integrating it.
+              DO T = 1, (Npoints_integration-1)/2 !-- Variables at previous time steps ---
+
+                 T0     = 2*T
+                 T0_mem = freq_integration * T0 - steps_since_last_saved_pos 
+
+                 !--- The tensor gamma_[0] and the memory function are found ---
+                 ! --- Maxwell version ---  
 !!$              gamma0_a(I,J) = gamma0(I,J,T0 - 1)
 !!$              gamma0_b(I,J) = gamma0(I,J,T0)
 !!$              gamma0_c(I,J) = gamma0(I,J,T0 + 1)
-              ! --- McKinley 2014 version ---              
-              gamma0_a(I,J) = gamma0(I,J,T0 - 1)/(1.0_MK + &
-                   a_damping * gamma0(I,J,T0 - 1)**b_damping)
-              gamma0_b(I,J) = gamma0(I,J,T0)    /(1.0_MK + &
-                   a_damping * gamma0(I,J,T0    )**b_damping)
-              gamma0_c(I,J) = gamma0(I,J,T0 + 1)/(1.0_MK + &
-                   a_damping * gamma0(I,J,T0 + 1)**b_damping)
-              
-              mem_functiona = mem_function(T0_mem - freq_integration)
-              mem_functionb = mem_function(T0_mem)
-              mem_functionc = mem_function(T0_mem + freq_integration)                      
-              
-              !-- Simpson's rule --
-              this%pt(I, J, K) = this%pt(I, J, K) + &
-                   (mem_functiona * gamma0_a(I,J) + &
-                   4.0_MK * mem_functionb * gamma0_b(I,J) + &
-                   mem_functionc * gamma0_c(I,J))
+                 ! --- McKinley 2014 version ---                                                  
+                 gamma0_a(I,J) = gamma0(I,J,T0 - 1)/(1.0_MK + &
+                      a_damping * gamma0(I,J,T0 - 1)**b_damping)
+                 gamma0_b(I,J) = gamma0(I,J,T0)    /(1.0_MK + &
+                      a_damping * gamma0(I,J,T0    )**b_damping)
+                 gamma0_c(I,J) = gamma0(I,J,T0 + 1)/(1.0_MK + &
+                      a_damping * gamma0(I,J,T0 + 1)**b_damping)
+
+!!$                 IF (J == dim .AND. I == dim) THEN
+!!$                    IF (K == 369) THEN
+!!$                       WRITE(*,*) "AAA ", T0, gamma0_a(1,1), gamma0_a(1,2), gamma0_a(2,1), gamma0_a(2,2)
+!!$                    ENDIF
+!!$                 ENDIF
+
+                 mem_functiona = mem_function(T0_mem - freq_integration)
+                 mem_functionb = mem_function(T0_mem)
+                 mem_functionc = mem_function(T0_mem + freq_integration)                      
+
+                 !-- Simpson's rule --
+                 this%pt(I, J, K) = this%pt(I, J, K) + &
+                      (mem_functiona * gamma0_a(I,J) + &
+                      4.0_MK * mem_functionb * gamma0_b(I,J) + &
+                      mem_functionc * gamma0_c(I,J))
+
+              ENDDO
+              this%pt(I,J,K) = - this%pt(I,J,K) * dt * freq_integration / 3.0_MK
+
+              !-- The part of the integration closer to the current time is done now. 
+              !   It is done analytically. The integration is done between steps 
+              !  -s0-fint, and current one (0), which corresponds to an integration between
+              !  t_cut and zero, being  t_cut = -(s0+fint) * dt
+              !---------------------------------------------------------------------
+
+              !---------------------------------------
+              ! Convert array notation to matrix
+              ! notation for clarity.
+              !---------------------------------------           
+              t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
+
+              !-- The analytic calculation is added to the pressure tensor
+              this%pt(I,J,K) = this%pt(I,J,K) + t_vgt(I,J) * integral
+
+              !-- The pressure is added --
+              IF ( I == J )  THEN
+                 !-- The osmotic pressure G is also added --
+!!$              this%pt(I,J,K) = this%pt(I,J,K) + this%p(K) + G
+                 this%pt(I,J,K) = this%pt(I,J,K) + this%p(K)
+              END IF
+
 
            ENDDO
-           ! --- IGNORE THIS
-           ! We get -pt because eq (31) from paper assumes a minus in front of M(t-t').
-           ! We don't have a minus there, so we put a minus.
-           ! --- NOW ITS CORRECT
-           ! Mem functions is correctly computed as -G*..., so tau = mem_fun*gamma is correct
-           this%pt(I,J,K) = + this%pt(I,J,K) * dt * freq_integration / 3.0_MK
-
-           !-- The part of the integration closer to the current time is done now. 
-           !   It is done analytically. The integration is done between steps 
-           !  -s0-fint, and current one (0), which corresponds to an integration between
-           !  t_cut and zero, being  t_cut = -(s0+fint) * dt
-           !---------------------------------------------------------------------
-         
-           !---------------------------------------
-           ! Convert array notation to matrix
-           ! notation for clarity.
-           !---------------------------------------           
-           t_vgt(I,J)  = this%vgt(I+dim*(J-1),K)
-
-           !-- The analytic calculation is added to the pressure tensor
-           this%pt(I,J,K) = - (this%pt(I,J,K) + t_vgt(I,J) * integral )
-
-           !-- The pressure is added --
-           IF ( I == J )  THEN
-!!$              !-- The osmotic pressure G is also added --
-!!$              this%pt(I,J,K) = this%pt(I,J,K) + this%p(K) + G
-              this%pt(I,J,K) = this%pt(I,J,K) + this%p(K)
-           END IF
-
 
         ENDDO
+!        STOP
 
-     ENDDO
-
-
+     ENDIF
   ENDDO
 
 9999 CONTINUE      
@@ -593,7 +614,7 @@ SUBROUTINE particles_update_previous_x(this,num, stat_info)
   IF(ASSOCIATED(max_phys)) THEN
      DEALLOCATE(max_phys)
   END IF
-  
+
   IF(ASSOCIATED(min_phys)) THEN
      DEALLOCATE(min_phys)
   END IF

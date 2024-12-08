@@ -29,11 +29,11 @@
         ! This code is  based on the original MCF code  developed by Xin Bian.
         ! The  current version  has  been developed  in collaboration  between
         ! - Marco Ellero,  leader of the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
         ! - Luca Santelli, member of  the  CFD Modelling and Simulation  group at
-        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain.
+        !   BCAM (Basque Center  for Applied Mathematics) in  Bilbao, Spain, and
         ! - Adolfo Vazquez-Quesada from  the Department of Fundamental Physics
-        ! at UNED, in Madrid, Spain.
+        !   at UNED, in Madrid, Spain.
         !
         ! Developers:
         !     Xin Bian.
@@ -1304,7 +1304,18 @@
                 l_map_gradx_prev = (.NOT. Newtonian), &
                 stat_info=stat_info_sub)
 
-           !***************************************************************
+           !********* Added by Adolfo for the integral fractional model **********
+           !-- At this point, gradx_prev is not corrected because of the presence of the wall --
+           !--- Next should routine should be checked before use --           
+!!$           CALL particles_correct_gradx_prev(this%particles, num_part_all, stat_info_sub)
+!!$           IF(stat_info_sub /=0) THEN
+!!$              PRINT *, "marching_integrate_VV: ", &
+!!$                   "Correcting gradx_prev tensor failed !"
+!!$              stat_info = -1
+!!$              GOTO 9999
+!!$           END IF
+           !*********************************************************************
+           
 
            !**** Modified by Adolfo for the integral fractional model ****
            ! This subroutine is in particles_compute_pressure_tensor.F90
