@@ -67,7 +67,7 @@ print(f"Program name with commit hash: {github_program_name}")
 
 
 print("\n#########\nAbout to copy (if newer)\nfile with suffix "+date+"\n#########")
-bkp_file="./code_bkp/mcf"+date
+bkp_file="./code_bkp/mcf"+date+github_program_name
 working_file="/scratch/lsantelli/1apps/mcf"+date
 shutil.copy2("./src/mcf",bkp_file)
 
