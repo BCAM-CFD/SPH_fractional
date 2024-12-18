@@ -25,6 +25,47 @@ date=modification_date("./src/mcf")
 # #date=datetime.datetime.today()
 date="_"+date.strftime('%y%m%d-%H%M%S')
 # date="_NEW"
+
+
+def get_latest_commit_hash():
+    # Get the latest commit hash from the current Git repository
+    result = subprocess.run(["git", "rev-parse", "HEAD"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if result.returncode != 0:
+        raise Exception("Failed to get the latest commit hash. Make sure you are in a Git repository.")
+    return result.stdout.decode('utf-8').strip()
+
+def append_commit_hash_to_program_name(program_name):
+    commit_hash = get_latest_commit_hash()
+    new_program_name = f"{program_name}_{commit_hash}"
+    return new_program_name
+
+def check_commit_already_done(commit_hash):
+    backup_dir = "./code_bkp/"
+    for filename in os.listdir(backup_dir):
+        if commit_hash in filename:
+            return True
+    return False
+
+def ask_user_confirmation():
+    while True:
+        user_input = input("The same commit has been already done at a different date. Do you want to proceed? (yes/no): ").strip().lower()
+        if user_input in ["yes", "no"]:
+            return user_input == "yes"
+        print("Please enter 'yes' or 'no'.")
+
+commit_hash = get_latest_commit_hash()
+if check_commit_already_done(commit_hash):
+    if not ask_user_confirmation():
+        print("Operation aborted by the user.")
+        sys.exit(0)
+
+program_name = ""
+github_program_name = append_commit_hash_to_program_name(program_name)
+print(f"Program name with commit hash: {github_program_name}")
+
+
+
+
 print("\n#########\nAbout to copy (if newer)\nfile with suffix "+date+"\n#########")
 bkp_file="./code_bkp/mcf"+date
 working_file="/scratch/lsantelli/1apps/mcf"+date
@@ -40,3 +81,9 @@ if result.stdout=="sending incremental file list\n":
 else:
     print("COPIED")
     print(result.stdout)
+
+
+
+
+
+
